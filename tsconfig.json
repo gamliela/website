@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "sourceMap": true,
+    "jsx": "react",
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "target": "es6",
+    "module": "es6",
+    "moduleResolution": "node",
+    "outDir": "out_tsc"
+  },
+  "include": ["src/**/*"]
+}
