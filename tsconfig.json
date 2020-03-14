@@ -2,13 +2,22 @@
   "compilerOptions": {
     "experimentalDecorators": true,
     "sourceMap": true,
-    "jsx": "react",
+    "jsx": "preserve",
     "noImplicitAny": true,
     "strictNullChecks": true,
     "target": "es6",
-    "module": "es6",
+    "module": "esnext",
     "moduleResolution": "node",
-    "outDir": "out_tsc"
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "lib": ["dom"],
+    "allowJs": false,
+    "skipLibCheck": false,
+    "strict": true
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"]
 }
