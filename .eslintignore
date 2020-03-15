@@ -1,3 +1,5 @@
 node_modules
 build
 out_tsc
+functions/nextRouter
+public/_next
