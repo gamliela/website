@@ -1,31 +1,22 @@
-# starter-react-mobx-css-modules
+# My Website
 
-My starter kit for projects based on React, MobX, CSS Modules and TypeScript.
+My Personal Website.
 
-This kit consists of the latest versions of:
+Used as lab for these technologies:
 
 - React
-- Webpack
-- MobX
+- TypeScript
+- Next.js
 - SCSS
 - CSS Modules
-- TypeScript
 - ESLint (with `react-hooks` plugin)
 - Prettier
-
-#### Build Instructions
-
-```
-$ yarn install
-$ yarn build
-```
-
-The output goes to `/build/bundle.js` & `/build/index.html`
+- Netlify
 
 #### Start Development Server
 
 ```
-$ yarn start
+$ yarn dev
 ```
 
 #### Lint with ESLint
@@ -38,4 +29,19 @@ $ yarn lint
 
 ```
 $ yarn prettify
+```
+
+#### Deploy to Netlify
+
+```
+$ yarn deploy
+```
+
+For the first deploy, the script will link your local environment to account on Netlify. 
+To deploy to prod, add the `--prod` parameter.
+
+It is also possible to simulate prod environment on your local machine, using [Netlify Dev](https://www.netlify.com/products/dev/).
+
+```
+$ yarn dev-netlify
 ```

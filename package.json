@@ -1,14 +1,12 @@
 {
   "name": "website",
-  "version": "1.0.0",
-  "main": "src/pages/index.tsx",
+  "version": "0.1.0",
+  "private": true,
   "repository": "https://github.com/gamliela/website.git",
   "author": "Alon Gamliel <alon@gamliela.com>",
   "license": "Apache-2.0",
   "dependencies": {
     "next": "^9.3.1",
-    "next-on-netlify": "^1.0.1",
-    "node-sass": "^4.13.1",
     "react": "^16.13.0",
     "react-dom": "^16.13.0"
   },
@@ -23,6 +21,8 @@
     "eslint-plugin-react-hooks": "^2.5.0",
     "http-server": "^0.12.1",
     "netlify-cli": "^2.40.0",
+    "next-on-netlify": "^1.0.1",
+    "node-sass": "^4.13.1",
     "prettier": "^1.19.1",
     "typescript": "^3.8.3"
   },
@@ -31,7 +31,7 @@
     "deploy": "netlify deploy",
     "dev": "next",
     "dev-netlify": "netlify dev",
-    "lint": "eslint './**/*.{ts,tsx,js,jsx}'",
-    "prettify": "prettier --write './**/*.{ts,tsx,js,jsx,json,md}'"
+    "lint": "eslint --ignore-path .gitignore './**/*.{ts,tsx,js,jsx}'",
+    "prettify": "prettier --ignore-path .gitignore --write './**/*.{ts,tsx,js,jsx,json,md}'"
   }
 }
