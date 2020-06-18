@@ -37,7 +37,7 @@ $ yarn prettify
 $ yarn deploy
 ```
 
-For the first deploy, the script will link your local environment to account on Netlify. 
+For the first deploy, the script will link your local environment to account on Netlify.
 To deploy to prod, add the `--prod` parameter.
 
 It is also possible to simulate prod environment on your local machine, using [Netlify Dev](https://www.netlify.com/products/dev/).
