@@ -6,6 +6,7 @@
   "author": "Alon Gamliel <alon@gamliela.com>",
   "license": "Apache-2.0",
   "dependencies": {
+    "@mapbox/rehype-prism": "^0.5.0",
     "@mdx-js/loader": "^1.6.5",
     "@next/mdx": "^9.4.4",
     "next": "^9.3.1",
