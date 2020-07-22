@@ -1,6 +1,6 @@
-// allow import of scss modules
+// allow import of css modules
 // since we use "css modules" plugin, the content type is defined as map from string to string
-declare module "*.scss" {
+declare module "*.css" {
   const content: { [key: string]: string };
   export default content;
 }
