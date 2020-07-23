@@ -7,6 +7,7 @@ Used as lab for these technologies:
 - React
 - TypeScript
 - Next.js (with PostCSS and CSS Modules)
+- Tailwind CSS (with typography)
 - ESLint (with `react-hooks` plugin)
 - Prettier
 - Netlify
