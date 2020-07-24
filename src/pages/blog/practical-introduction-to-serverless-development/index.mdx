@@ -20,29 +20,27 @@ import apiRestrictions from "./api-restrictions.png";
 import thirdPartyCookiesException from "./3rd-party-cookies-exception.png";
 
 export const meta = {
-  title: 'Practical Introduction to Serverless Development',
-  subTitle: 'How to build a secured website with a database, without a server',
+  title: "Practical Introduction to Serverless Development",
+  subTitle: "How to build a small website free of cost",
   description: `This guide describes how to build a public website, including secured database, without using a central server. The technology stack includes Netlify, Next.js, Firebase and Google Cloud APIs.`,
-  date: '2020-05-09',
-}
+  date: "2020-05-09",
+};
 
 ## Intro
 
-Building a small website with Wordpress is still the preferred option for many small businesses today. For a small business, Wordpress might be a surprising choice: it requires a running server with a separate SQL database, which means to invest in maintenance time and infrastructure costs.
+For many years, web servers have been used to provide a layer of security for websites. They are often placed in front of database servers, and prevent access from unauthorised users. Wordpress have a security layer baked in, which explains at least part of its popularity. However, these days running a server for the sole purpose of authentication is not needed any more. OAuth2 protocol abstracts the tasks of authentication and authorization, and identity management can be purchased as a service from all major cloud providers. [Google Identity Platform](https://cloud.google.com/identity-platform), [AWS Cognito](https://aws.amazon.com/cognito/) and [Auth0](https://auth0.com/) are just a few examples.
 
-For many years, web servers have been used to provide a layer of security for websites. They are often placed in front of database servers, and prevent access from unauthorised users. Wordpress have the security layer baked in, which explains at least part of its popularity. However, these days running a server for the sole purpose of authentication is not needed any more. OAuth2 protocol abstracts the tasks of authentication and authorization, and identity management can be purchased as a service from all major Cloud providers. Google Identity Platform, AWS Cognito and Auth0 are just a few examples.
+With a modern tool stack, it possible to stitch together different services to host HTML pages, store data in a database, authenticate users and more. This technique is called serverless development - as there is no central server that orchestrates the different services. Obviously, many real servers are still involved, but they are not necessarily aware to each other and can be even provided by different vendors. The orchestration can actually be part of the Javascript application running at the user's browser. The trust, which is crucial for multi-vendor services to work together, is achieved by exchanging signed tokens as part of the OAuth2 protocol.
 
-With a modern tool stack, it possible to stitch together different services to host HTML pages, to store data in a database, to authenticate users and more. This technique is called serverless development - as there is no central server that orchestrates the different services. Obviously, many real servers are still involved, but they are not necessarily aware to each other and can be even provided by different vendors. The orchestration can actually happen on the client itself - as part of the Javascript application running at the user's browser. The trust, which is crucial for multi-vendor parties to work together, is achieved by exchanging signed tokens as part of the OAuth2 protocol.
+In this post I’m going to show how to build a personal shopping list editor. A user can signup to the app on a public url, create a personal shopping list and store it securely in the cloud. All of this without writing any server code and with no running costs.
 
-In this post I’m going to show how to build a personal shopping list editor. A user can signup to the app, create a personal shopping list and store it securely in the cloud. All of that - without writing any server code and with no running costs.
-
-We will use Next.js to bundle our web application, and Netlify to serve it to the public. Firebase will store the data securely. We will allow users to signin the application using their personal Google account, so we don't need to build a user management system of our own.
+We will use [Next.js](https://nextjs.org/) to bundle React application, and [Netlify](https://www.netlify.com/) to serve it to the public. [Firebase](https://firebase.google.com/) will store the data securely. We will allow users to signin the application using their personal Google account, so we don't need to build a user management system of our own. [Live demo](https://blog-serverless-auth-example.gamliela.com/) and [complete source code](https://github.com/gamliela/blog-serverless-auth-example) are also available.
 
 ## The Local Application
 
 Let’s start. Our first goal is to create a simple app, a shopping list editor, and run it on our local machine. No database nor authenticating are yet involved.
 
-We will begin with a skeleton application powered by Next.js. Choosing Next.js will allow us to pack the application as bunch of static HTML, JS and CSS files, so we can easily serve them from a remote server later on.
+We will begin with a skeleton application powered by Next.js. This framework allows us to pack React application as bunch of static HTML, JS and CSS files, so we can easily serve them from a remote server later on.
 
 Run the following command from a new directory:
 
@@ -65,14 +63,14 @@ function ShoppingList() {
   const addItem = useCallback(() => {
     if (inputElement.current && inputElement.current.value) {
       const newValue = inputElement.current.value;
-      setList((list) => [...list, newValue]);
+      setList(list => [...list, newValue]);
       inputElement.current.value = "";
     }
   }, []);
 
   // removes the i'th item from the list
-  const deleteItem = (index) => {
-    setList((list) => list.filter((_, i) => i != index));
+  const deleteItem = index => {
+    setList(list => list.filter((_, i) => i != index));
   };
 
   return (
@@ -130,7 +128,7 @@ $ yarn next dev
 
 ## Deploy
 
-Our shopping list application can only run on a local machine. It would be useful to share it with the public, so everyone could benefit from it. These days it’s easy to host applications for free: with services like Github Pages, Now.sh or Netlify it is possible to host static assets and serve them with no running costs. The catch is that we need to convert our JSX files to pure (“static”) Javascript files, so the client’s browser could process them. Luckily there are a bunch of tools that help with this mission: Gatsby, Next.js and React Static are only a few examples.
+Our shopping list application can only run on a local machine. It would be useful to share it with the public, so everyone could benefit from it. These days it’s easy to host applications for free: with services like [Github Pages](https://pages.github.com/), [Vercel](https://vercel.com/) or [Netlify](https://www.netlify.com/) it is possible to host static assets and serve them with no running costs. The catch is that we need to convert our JSX files to pure ("static") Javascript files, so the client’s browser could process them. Luckily there are bunch of tools that help with this mission: [Gatsby](https://www.gatsbyjs.org/), [Next.js](https://nextjs.org/) and [React Static](https://github.com/react-static/react-static) are only few examples.
 
 In our example we’re going to generate a static version of our app with Next.js, and deploy it to Netlify servers using their free hosting plan.
 
@@ -156,47 +154,47 @@ $ yarn netlify deploy --dir=out --prod
 
 If you haven’t used Netlify in the past, don’t worry. Just follow the prompt messages and it will create an account on your behalf. You can accept all defaults.
 
-In the above command we asked netlify to deploy the content of “out” directory. This is the directory that Next.js has exported the application into. The `--prod` switch tells Netlify to use the same URL for each deployment, which is based on the site name you chose during account setup. Without this switch Netlify will generate a unique URL for each deployment: this can be useful to share private previews of your website before exposing it on the main URL.
+In the above command we asked netlify to deploy the content of `out` directory. This is the directory that Next.js has exported the application into. The `--prod` switch tells Netlify to use the same URL for each deployment, which is based on the site name you chose during account setup. Without this switch Netlify will generate a unique URL for each deployment: this can be useful to share private previews of your website before exposing them on the main URL.
 
-Check out the prompt logs, and look for “Website URL”. Netlify has deployed your website to that URL, and it’s now live and any browser can access it! This is how the URL looks on my machine:
+Check out the prompt logs, and look for "Website URL". Netlify has deployed your website to that URL, and it’s now live and any browser can access it! This is how the URL looks on my machine:
 
 ```none
-Website URL:       https://blog-serverless-auth-example.netlify.app
+Website URL: https://blog-serverless-auth-example.netlify.app
 ```
 
-You may have noticed a few changes in the file system. The credentials to login to Netlify are stored in `~/.netlify` directory, so they can be picked by other projects in the future. The linkage between your Netlify account and your local project is stored under the `./.netlify` directory. `./.next` and `./out` directory contain the results of `build` and `export` steps, respectively, and should be added to `./.gitignore`.
+You may have noticed a few changes in the file system. The credentials to login to Netlify are stored in `~/.netlify` directory, so they can be picked by other projects in the future. The linkage between your Netlify account and your local project is stored under the `./.netlify` directory. `./.next` and `./out` directories contain the results of `build` and `export` steps, respectively, and should be added to `./.gitignore`.
 
 ## Database
 
-Clearly our users want to persist their list somewhere, so next time they open their browser they can continue from where they've left. Traditionally we would now install MySql or mongodb on some machine, and build some sort of Restful api to access that data. This also means that we would need to pay the cost of running that machine, and perform a lot of maintenance routines. But with the serverless approach, we're going to allow databases access directly from the browser, skipping the mediator server. Some of the database-as-a-service vendors are offering a generous free plan, which means you can run your website with literally zero cost.
+Clearly our users want to persist their list somewhere, so next time they open their browser they can continue from where they've left. Traditionally, we would now install MySql or MongoDB on some machine, and build some sort of Restful API to access the data. This also means that we would need to pay the cost of running that machine, and perform a lot of maintenance routines. But with the serverless approach, we're going to allow database access directly from the browser, skipping the mediator server. Some of the database-as-a-service vendors are offering a generous free plan, which means you can run your website with literally zero cost.
 
-We’ll use Google Firebase as our database service. Go to https://console.firebase.google.com/, login or create an account if necessary, and select “Add project”. In the following step choose a name for your project and click “Continue”:
+We’ll use Google Firebase as our database service. Go to https://console.firebase.google.com/, login or create an account if necessary, and select "Add project". In the following step choose a name for your project and click "Continue":
 
 <img src={projectSetupStep1} alt="Project setup screen, step 1" />
 
-In the next step disable Google Analytics to make things simpler, and click “Create project”.
+In the next step disable Google Analytics to make things simpler, and click "Create project".
 
 <img src={projectSetupStep2} alt="Project setup screen, step 2" />
 
-Let Google finish the provisioning work, and click “Continue” when it’s done.
+Let Google finish the provisioning work, and click "Continue" when it’s done.
 
 <img src={projectSetupReady} alt="Project setup screen, ready" />
 
-Now that we have Firebase project defined, we can add Database to it. From the left sidebar choose “Database” and then “Create database”.
+Now that we have a Firebase project defined, we can add a database to it. From the left sidebar choose "Database" and then "Create database".
 
 <img src={databaseSetupIntro} alt="Database setup screen, intro" />
 
-Next step Firebase will ask you to define access rules. At the moment our project doesn’t support users or signin flows, so the fresh database needs to allow access from unauthenticated users. Select “Start in test mode” to opt into this behaviour:
+Next step Firebase will ask you to define access rules. At the moment our project doesn’t support users or signin flows, so the fresh database needs to allow access from unauthenticated users. Select "Start in test mode" to opt into this behaviour:
 
 <img src={databaseSetupStep1} alt="Database setup screen, step 1" />
 
-Next step is to select a region in the world to run the database service. For our test project it doesn’t really matter: I chose Australia because I live in New Zealand, but you can choose any other region. Click “Done” when ready.
+Next step is to select a region in the world to run the database service. For our test project it doesn’t really matter: I chose Australia because I live in New Zealand, but you can choose any other region. Click "Done" when ready.
 
 <img src={databaseSetupStep2} alt="Database setup screen, step 2" />
 
 **Important Note:** You have just created a database running with unrestricted access to the public. If you have reached this step you’ll probably want to continue until the end of this guide, where I’m going to show how to secure the database.
 
-Great! So you have a database ready now. Let’s create [a “Collection”](https://firebase.google.com/docs/firestore/data-model#collections) to manage our shopping list. Click “Start collection”:
+Great! So you have a database ready now. Let’s create a ["Collection"](https://firebase.google.com/docs/firestore/data-model#collections) to manage our shopping list. Click "Start collection":
 
 <img src={dataSetupEmpty} alt="Data setup screen, empty" />
 
@@ -204,7 +202,7 @@ And then type `shopping-lists` as our initial collection.
 
 <img src={dataSetupStep1} alt="Data setup screen, step 1" />
 
-This is just a demo project, so we’re going to have only one collection and one document to represent our shopping list. We’ll name our only document as `default`, and add `items` field with the type of `array`. Setup the collection so it looks like here, and click “Save” when done.
+This is just a demo project, so we’re going to have only one collection and one document to represent our shopping list. We’ll name our only document as `default`, and add `items` field with the type of `array`. Setup the collection so it looks like here, and click "Save" when done.
 
 <img src={dataSetupStep2} alt="Data setup screen, step 2" />
 
@@ -212,7 +210,7 @@ If everything went alright, your database should look like this now:
 
 <img src={dataSetupComplete} alt="Data setup screen, complete" />
 
-Great! So we have a database ready with an empty shopping list inside. Let’s connect that database to our application. We’re going to need the Firebase sdk, so let’s add it to our project:
+Awesome! Our database is ready and populated with an empty shopping list called `default`. Let’s connect the database to our application. We'll use the [Firebase SDK](https://github.com/firebase/firebase-js-sdk), so let’s add it to our project:
 
 ```none
 $ yarn add firebase
@@ -232,31 +230,33 @@ if (typeof window !== "undefined") {
 export default firebase;
 ```
 
-Note that we’re not giving Firebase any key or secret - just the project ID which you have chosen when you created the Firebase project. We’ll come back to this when we’ll add authentication.
-Another point to notice is that we initialize Firebase only on the client side (`window !== "undefined"`). Otherwise the initialization code will also run on the local development server. That’s not a bad thing by itself, but because of how Next.js implements hot-reloading `initializeApp` might be rerun on the server. Firebase does not allow multiple invocations of `initializeApp` and if that happens you'll see this exception on the console: `Firebase: Firebase App named '[DEFAULT]' already exists`.
+Notes:
+
+1. We’re not giving Firebase any key or secret - just the project ID which you have chosen when you created the Firebase project. We’ll come back to this when we’ll add authentication.
+2. Firebase get initialized only on the client side (`window !== "undefined"`). Without the condition the initialization code will also run on the local development server. That’s not a bad thing by itself, but because of how Next.js implements hot-reloading `initializeApp` might rerun on the server. Firebase does not allow multiple invocations of `initializeApp` and if that happens you'll see this exception on the console: `Firebase: Firebase App named '[DEFAULT]' already exists`.
 
 Now let’s add some functions to load and save a shopping list from the database. Add `./src/shared/database.js`:
 
 ```js
 import firebase from "./firebase_app";
-     import "firebase/firestore";
+import "firebase/firestore";
 
-     async function loadShoppingList(listName) {
-       const collection = firebase.firestore().collection("shopping-lists");
-       const shoppingList = await collection.doc(listName).get();
-       const data = shoppingList.data();
-       return data ? data.items : [];
-     }
+async function loadShoppingList(listName) {
+  const collection = firebase.firestore().collection("shopping-lists");
+  const shoppingList = await collection.doc(listName).get();
+  const data = shoppingList.data();
+  return data ? data.items : [];
+}
 
-     async function saveShoppingList(listName, items) {
-       const collection = firebase.firestore().collection("shopping-lists");
-       return collection.doc(listName).set({ items: items || [] });
-     }
+async function saveShoppingList(listName, items) {
+  const collection = firebase.firestore().collection("shopping-lists");
+  return collection.doc(listName).set({ items: items || [] });
+}
 
-     export { loadShoppingList, saveShoppingList };
+export { loadShoppingList, saveShoppingList };
 ```
 
-Now let’s update our `ShoppingList` component to use the database. Update the marked lines:
+Update the `ShoppingList` component to use the database:
 
 ```jsx
 import React, { useCallback, useEffect, useRef, useState } from "react";
@@ -278,7 +278,7 @@ function ShoppingList({ listName }) {
   }, [listName, list]);
 
   // removes the i'th item from the list and update the database
-  const deleteItem = (index) => {
+  const deleteItem = index => {
     const newList = list.filter((_, i) => i != index);
     saveShoppingList(listName, newList).then(() => setList(newList));
   };
@@ -288,19 +288,15 @@ function ShoppingList({ listName }) {
     loadShoppingList(listName).then(setList);
   }, [listName]);
 
-  return (
-    <table>
-	// ... no changes here
-    </table>
-  );
+  return <table>// ... no changes here</table>;
 }
 
 export default ShoppingList;
 ```
 
-The component now accepting the name of the list in the database as a parameter. Then we initialize the UI on the `useEffect` block, by calling our database function. We update the database after adding/deleting rows from the UI. Clearly it’s not a production-level code, as we’re not dealing with errors, race conditions and probably other problems, but for our demo this is good enough.
+The component is now accepting the name of the database list as a parameter. Then we initialize the UI on the `useEffect` block, by calling our database load function. We save to the database after adding/deleting rows from the UI. Clearly it’s not a production-level code, as we’re not dealing with errors, multiple clients and probably other problems, but for our demo this is good enough.
 
-Our last step is to update `./pages/index.jsx` - we pass “default” as parameter to `ShoppingList` component: recall that our database contains only one shopping list with the name `default`.
+Our last step is to update `./pages/index.jsx` - we pass `default` as parameter to `ShoppingList` component: recall that our database contains only one shopping list with the name `default`.
 
 ```jsx
 import React from "react";
@@ -324,27 +320,27 @@ Congratulations! You have created a webapp, backed by a database, with no cost a
 
 ## Authentication
 
-We have one missing piece left to make our example complete. Our database has only one shopping list, and all users are accessing and potentially changing the same list. There is also no privacy: everyone with the URL can access the data and change it. Wouldn’t it be cool to have a separate list for each user, and not allowing users to browse each other lists?
+We have one missing piece left to make our example complete. Our database has only one shopping list, and all users are accessing and potentially changing the same list. There is also no privacy: anyone with Internet access can connect Firebase and change the data directly. Wouldn’t it be cool to have a separate list for each user, and to not allow users to browse each other lists?
 
-That’s exactly what we’re going to do. We’re not going to build our own user management system now. Similarly to database-as-a-service, there are external services that manage user identities, authentication and authorization. In the age of GDPR, leveraging 3rd parties is actually safer: we don’t need to deal with private and sensitive data ourselves, and hence less exposed to security breaches.
+That’s exactly what we’re going to do. We’re not going to build our own user management system now. Similarly to database-as-a-service, there are external services that manage user identities, authentication and authorization. In the age of GDPR, managing these operations with 3rd party tools is actually safer: we don’t need to deal with private and sensitive data ourselves, and hence less exposed to security breaches or tight regulations.
 
-First thing to do is to enable authentication for our Firebase project. Open [Firebase console](https://console.firebase.google.com/), Then Authentication on the left and then choose “Sign-in method” tab.
+First thing to do is to enable authentication for the Firebase project. Open [Firebase console](https://console.firebase.google.com/), Then "Authentication" on the left and then choose "Sign-in method" tab.
 
 <img src={authentication} alt="Authentication screen" />
 
-Firebase allows many different ways to sign in. The traditional method is “Email/Password”: users would have to choose a name and a password, and then Firebase will store their credentials in a secured way. Firebase will also manage the flow end-to-end, for example it will validate the email address and will offer users capability to reset passwords out of the box.
+Firebase allows many different ways to sign in. The traditional method is "Email/Password": users would have to provide their email address and a password, and then Firebase will store their credentials in a secured way. Firebase will also manage the flow end-to-end, for example it will validate the email address or handle password resets out of the box.
 
-However, choosing a new username and password might be annoying, and may lead to less registered users. It would be much easier if I could use my existing Google account, for instance, to login into the site. We can safely assume that every person that is going to use our app is going to have a Google account.
+However, choosing a password might be annoying and harm user acquisition. It would be much easier if users could use their own Google account, for instance, to signin the application. We can safely assume that any person that trials our app also owns a Google account.
 
-The way it’s working is based on a standard protocol called OpenID Connect, a layer on top of the OAuth2 protocol, and the details are out of scope for this article. But the technique can be applied to any other “Identity Provider” that supports the OpenID Connect protocol, and indeed Firebase allows sign ups from many other famous social networks. In a nutshell, what happens is that when a user wants to sign-in with Google, you’ll redirect the user to a page managed by Google, and then Google themselves will authenticate the user. If successful, Google will (eventually) redirect the browser back to your website with an identity token (JWT). This token is then used by the browser to authenticate against Firebase. Since the token is created and signed by Google, and Firebase is configured to trust Google tokens, traffic that comes directly from our website is honored.
+Firebase allows exactly that. The way it’s working is based on a standard protocol called OpenID Connect, a layer on top of the OAuth2 protocol, and the details are out of scope for this article. But the technique can be applied to any other "Identity Provider" that supports the OpenID Connect protocol, and indeed Firebase allows sign-ups from many other social networks. In a nutshell, what happens is when a user wants to signin with Google, you need to redirect them to a page managed by Google, and then Google themselves will authenticate the user. If successful, Google will (eventually) redirect the browser back to your website with an identity token (JWT). This token is then used by the browser to get authenticated against Firebase. Since the token is created and signed by Google, and Firebase is configured to trust Google tokens, traffic that comes directly from our website is honored.
 
-Let’s try it out. Enable “Google” provider. You will be asked to provide some details about your new website.
+Let’s try it out. Enable "Google" provider. You will be asked to provide some details about your new website.
 
 <img src={googleSignin} alt="Google Sign-in screen" />
 
-If you haven’t done so already, choose a “public-facing name” for your project and an email address. Both might be presented to your website users under different circumstances. Click “Save” when done.
+If you haven’t done so already, choose a "public-facing name" for your project and an email address. Both might be presented to your website users under different circumstances. Click "Save" when done.
 
-Cool. Now let’s build an authentication component in our website. The component will simply render a “sign-in” button if the user hasn’t already signed-in; or render the children component if they have.
+Cool. Now let’s build an authentication component in our application. The component will simply render a "sign-in" button if the user hasn’t already signed-in; or render the children component if they did.
 
 First we’ll add a generic hook to manage the sign-in using Firebase SDK. Add the following to `./shared/firebase_auth.js`:
 
@@ -358,7 +354,7 @@ function useAuth() {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
+    const unsubscribe = firebase.auth().onAuthStateChanged(user => {
       setIsLoading(false);
       setUser(user);
     });
@@ -382,9 +378,9 @@ async function signOut() {
 export { useAuth, signIn, signOut };
 ```
 
-The `useAuth` hook manages state that consists of the current sign-in user, and Firebase initialisation status. It registers a listener to catch user change events from the Firebase SDK, as described in the [general docs](https://firebase.google.com/docs/auth/web/start). We also define two separate methods to sign-in and sign-out from Google. Have another read in the [docs here](https://firebase.google.com/docs/auth/web/google-signin) for further details.
+The `useAuth` hook manages state that consists of the current sign-in user, and Firebase SDK initialisation status. It registers a listener to catch user change events from the Firebase SDK, as described in the [general docs](https://firebase.google.com/docs/auth/web/start). We also define two separate methods to sign-in and sign-out from Google. Have another read in the [docs here](https://firebase.google.com/docs/auth/web/google-signin) for further details.
 
-The standard caveat for this implementation applies: Using React hooks with asynchronous functions is tricky. If `onAuthStateChanged` get triggered for an unmount component, a warning will show up in the console. Also, this code doesn’t handle sign-in errors: You’ll need to call `getRedirectResult` ([docs](https://firebase.google.com/docs/reference/js/firebase.auth.Auth#getredirectresult)) on page load to get sign-in error details.
+The standard caveat for this demo applies: Using React hooks with asynchronous functions is tricky. If `onAuthStateChanged` get triggered for an unmount component, a warning will show up in the console. Also, this code doesn’t handle sign-in errors: You’ll need to call [`getRedirectResult`](https://firebase.google.com/docs/reference/js/firebase.auth.Auth#getredirectresult) on page load to get sign-in error details.
 
 We need to update Firebase configuration at `./shared/firebase_app.js` to allow our website to authenticate with Google.
 
@@ -402,7 +398,7 @@ if (typeof window !== "undefined") {
 export default firebase;
 ```
 
-`authDomain` is simply a combination of your project-id and `firebaseapp.com`. The id can be retrieved from the Project Settings page at Firebase console.
+`authDomain` is simply combination of your project-id and `firebaseapp.com`.
 
 Also add a file called `./.env.local` with the actual `apiKey` value:
 
@@ -410,7 +406,7 @@ Also add a file called `./.env.local` with the actual `apiKey` value:
 NEXT_PUBLIC_FIREBASE_API_KEY=<your-api-key>
 ```
 
-Your key can be retrieved from the project settings page as well. Be careful to not commit this file (and the key) to a remote repository: here we are using [next.js capabilities](https://nextjs.org/docs/basic-features/environment-variables#loading-environment-variables) to inject the key on build time. Note, however, that the key would be eventually available to the clients and it's not a secret. It allows our application to do operations on your Google Cloud account, which could lead to unexpected charges on your account, and therefore, we need to restrict the key’s functionality to reduce the security risk. This is explained at the end of this guide.
+Your key can be retrieved from "Project settings" page at Firebase console. Be careful to not commit this file (and the key) to a remote repository: here we are using [next.js capabilities](https://nextjs.org/docs/basic-features/environment-variables#loading-environment-variables) to inject the key on build time. Note, however, that the key would be eventually available to the clients and it's not a secret. It allows our application to do operations on your Google Cloud account, which could lead to unexpected charges on your account. Therefore, we need to restrict the key’s functionality to reduce the security risk. This is explained at the end of this guide.
 
 Now let’s create a new component, called `PersonalShoppingList`, that will display a shopping list based on the current signed-in user. If no user is signed-in, it will display a `sign-in` button. Add `./components/PersonalShoppingList.jsx`:
 
@@ -440,7 +436,7 @@ function PersonalShoppingList() {
 export default PersonalShoppingList;
 ```
 
-As you can see from the code, the shopping list name is based on the current user id, so each user will have it’s own list on our database.
+As you can see from the code, the shopping list name is based on the current user id, so each user will have it’s own list on the database.
 
 Last step is to use this new component. Update `./pages/index.jsx`:
 
@@ -460,14 +456,14 @@ function HomePage() {
 export default HomePage;
 ```
 
-Great! Everything should work now, at least from your console. Run again the application. Try to sign-in with different user accounts. Can you see how each list is stored separately for each user? Have a look in the Firebase console too, to see how the data looks at the database level.
+Great! Everything should work now, at least from a local environment. Run again the application. Try to sign-in with different user accounts. Can you see how each list is stored separately for each user? Have a look in the Firebase console too, and watch how the data looks from the database perspective.
 
-Try to build and deploy the application. Sign-in will not work for you, because we need to tell Firebase authentication that Netlify is a trusted domain to handle OAuth redirects. Redirects are part of the authentication process. Firebase are actually explaining that in the browser console:
+Build and deploy the application, and then try to sign-in from the deployed instance. It won't work, because we need to tell Firebase that Netlify is a trusted domain to handle OAuth redirects. Redirects are part of the authentication process. Firebase are actually explaining that in the browser console:
 
 <img src={exceptionAtConsole} alt="Exception at console" />
 
-So open the Firebase console, Auth section, the Sign-in method tab, and at the Authorized domains section add “<your-project-id\>.netlify.app” domain.
-After the change the section should look like:
+So open the Firebase console, Auth section, the Sign-in method tab, and at the Authorized domains section add `<your-project-id\>.netlify.app` domain.
+After the change the section should look similar to this (you'll have project id instead of `blog-serverless-auth-example`):
 
 <img src={authorizedDomains} alt="Authorized domains screen" />
 
@@ -481,13 +477,13 @@ This approach allows us to separate data of different users, but it is still not
 
 In order to solve this problem we need to do two things. First, we need to pass the identity token, which is stored on the user’s browser after a successful login, to the Firebase database. Since we’re using the same SDK for both Firebase authentication and database services, it’s already happening out of the box. The next step is to setup Firebase database to actually utilise the identity token that is sent with every data request, and authorise it against the data that is being requested. Let’s see how to do it.
 
-Open the Firebase console, choose Database from the sidebar and then click on the Rules tab. In this screen you can configure the access rules to all stored data. When we initially created the database we chose “test mode”, which basically sat very open access rules. Let’s look on them closely now:
+Open the Firebase console, choose Database from the sidebar and then click on the Rules tab. In this screen you can configure the access rules to all stored data. When we initially created the database we chose "test mode", which basically sat very open access rules. Let’s look on them closely now:
 
 <img src={rulesEditor} alt="Rules editor screen" />
 
 Basically this file says: For all collections in the system (line 3), and for every nested document inside (line 13), allow both read and write access as long we haven’t passed 30 June 2020.
 
-We would like to change this rule, so access can be done at any time, but each user can access only its own shopping list. Replace the content of the rules file with the following, and click “Publish”.
+We would like to change this rule, so access can be done at any time, but each user can access only its own shopping list. Replace the content of the rules file with the following, and click "Publish".
 
 ```none
 rules_version = '2';
@@ -500,15 +496,15 @@ service cloud.firestore {
 }
 ```
 
-We are basically checking two things: The user is authenticated (so its `uid` is valid), and there is a match between user id and the shopping list name. For more information on Firebase database rules and how to set them up, please refer to the [docs](https://firebase.google.com/docs/firestore/security/rules-structure).
+We are basically checking two things: The user is authenticated (`request.auth` is valid), and there is a match between the user id and the shopping list name. For more information on Firebase database rules and how to set them up, please refer to the [docs](https://firebase.google.com/docs/firestore/security/rules-structure).
 
-Okay time for testing! From the first impression, nothing should really change. But try to create two different shopping lists with two different users. Then hardcode one user uid in the line
+Okay, time for testing! From first impression, nothing should really change. But try to create two different shopping lists with two different users. Then hardcode one user uid in the line
 
 ```jsx
 <ShoppingList listName={`user-${user.uid}`} />
 ```
 
-And then try to sign in with the other user. Does it still work? Can you still see the first user’s list? If everything works correctly, you should get popup error message with “FirebaseError: Missing or insufficient permissions”:
+And then try to sign in with the other user. Does it still work? Can you still see the first user’s list? If everything works correctly, you should get popup error message with "FirebaseError: Missing or insufficient permissions":
 
 <img src={runtimeError} alt="Runtime error screen" />
 
@@ -516,13 +512,13 @@ In a production code you would probably need to handle this exception more nicel
 
 ## Secure your API keys!
 
-Serverless can be dangerous. By exposing API keys directly on the client, anyone can use that key for accessing cloud resources on your behalf. Theoretically, one can use that key to bombard Firebase with requests, for example with a bot that generates huge shopping lists, and as result you’ll end up with a huge bill by the end of the month. In a traditional server-based development this is not an issue, because overloading the server will simply make it crash. But in serverless world, there is no load limit, and no cost limit as well! Hence it's a good practice to limit your budget on the account level. We'll touch this point again later.
+Serverless can be dangerous. By exposing API key directly to the browser, anyone can use that key for accessing cloud resources on your behalf. Theoretically, one can use that key to bombard Firebase with requests, for example with a bot that generates huge shopping lists, and as result you’ll end up with a huge bill by the end of the month. In a traditional server-based development this is not an issue, because overloading the server will simply make it crash. But in serverless world there is no load limit, and no cost limit too! Hence it's a good practice to limit your budget on the account level. We'll touch this point again later.
 
-Google [docs](https://cloud.google.com/docs/authentication/api-keys) provide some best practices around api keys, and how to secure them. One of their significant recommendation is to actually not use them - but that would defeat the purpose of this guide so we’ll ignore this recommendation. Yes - serverless development does pose some new risks!
+Google provide some [best practices](https://cloud.google.com/docs/authentication/api-keys) around api keys, and how to secure them. One of their significant recommendation is to actually not use them - but that would defeat the purpose of this guide so we’ll ignore this recommendation. Yes - serverless development does pose some new risks!
 
-What can we do then? As explained in those docs we can restrict the key. We can make sure that only certain websites can use the key, and only for a very specific purpose. This will reduce the security risk.
+What can we do then? As explained at Google's documentation we can restrict the key. We can make sure that only certain websites can use the key, and only for a very specific purpose. This will reduce the security risk.
 
-In order to restrict the key we need to login to the Google Cloud console (and not the Firebase Console which we used until now). Note that Firebase project is essentially an abstraction layer on top of Google Cloud services - every Firebase project has a Google Cloud project behind it.
+In order to restrict the key we need to login to the [Google Cloud console](https://console.developers.google.com/apis/credentials) (and not the Firebase Console which we used until now). Note that Firebase project is essentially an abstraction layer on top of Google Cloud services - every Firebase project has a Google Cloud project behind it.
 
 From the navigation menu, choose APIs & Services and then Credentials from the sidebar. Your screen should show something like:
 
@@ -530,32 +526,34 @@ From the navigation menu, choose APIs & Services and then Credentials from the s
 
 There you’ll find your Firebase API key, with a small icon providing a warning that the key is not restricted. Click on the key to edit it.
 
-First, let’s add website restrictions. Choose “HTTP referrers” and then add three restrictions as demonstrated here (replace `blog-serverless-auth-example` with your project-id):
+First, let’s add website restrictions. Choose "HTTP referrers" and then add three restrictions as demonstrated here (replace `blog-serverless-auth-example` with your project-id):
 
 <img src={websiteRestrictions} alt="Website restrictions section" />
 
-We’re basically allowing using the key from Firebase auth domain (used during authentication and out of scope for this guide), the local environment, and our “production” domain which is hosted on Netlify. Note that HTTP referrers can be mocked, so this method doesn’t provide enough protection.
+We’re basically allowing using the key from Firebase auth domain (used during authentication and out of scope for this guide), the local environment, and our "production" domain which is hosted on Netlify. Note that HTTP referrers can be mocked, so this restriction alone doesn’t provide enough protection.
 
-Next thing is to limit the scope of Google cloud APIs that can be accessed with our key. We’re using the key only to get the authenticated user from Google. Head to the “API restrictions” section, choose “Restrict key” and add “Identity Toolkit” API to the list. For our users to be able to stay signed in for more than an hour, we would also need the “Token Service” API (behind the scene, the Firebase SDK will refresh the identity token acquired by “Identity Toolkit” API using the "Token Service" API). Once done, click Save.
+Next thing is to limit the scope of Google cloud APIs that can be accessed with our key. We’re using the key only to get the authenticated user from Google. Head to the "API restrictions" section, choose "Restrict key" and add "Identity Toolkit API" to the list. For our users to be able to stay signed-in for more than an hour, we would also need the "Token Service API" (behind the scene, the Firebase SDK will use the "Token Service API" to refresh the identity token acquired by the "Identity Toolkit API"). Once done, click Save.
 
 <img src={apiRestrictions} alt="API restrictions section" />
 
 That’s it! Your API key is now restricted to the minimal scope that still allows our website to function.
 
-Last tip I have on this subject is to define a budget alert on your billing account. If your api key gets abused and suddenly your costs rise up above some threshold, you’ll get notified immediately. More on this topic at [Google documentation](https://cloud.google.com/billing/docs/how-to/budgets). For this guide this advice is less relevant, because the project we created works on Google free tier, and it shouldn’t be linked to any billing account. Still, having this alert set is a good habit.
+**Tip:** Always define a budget alert on your billing account. If your API key gets abused and suddenly your costs rise up above some threshold, you’ll get notified immediately. More on this topic at [Google documentation](https://cloud.google.com/billing/docs/how-to/budgets). For this guide this advice is less relevant, because the project we created works on Google free tier, and it shouldn’t be linked to any billing account. You can verify that the project we created in this guide is not linked to a billing account at [Google Cloud billing console](https://console.developers.google.com/billing/projects). Still, having this alert set is a good habit.
 
 ## Summary
 
-Development in serverless style is challenging. It requires integration with multiple different tools and the learning curve might be steep. Serverless ecosystem is still evolving, and best practices are still get written. There are risks as well: costs might rise quickly, and security requires more knowledge to get implemented correctly.
+Development in serverless style is challenging. It requires integration with multiple different tools and the learning curve might be steep. Serverless ecosystem is still evolving, and best practices are still get written. Costs rise quickly, and for heavy-load systems the serverless architecture tends to be more expensive. Debugging is limited because lack of access to the infrastructure. Security requires more knowledge to get implemented correctly.
 
-But, Serverless is also fun! In this post we have seen how to use several different 3rd party services to build a complete new web application. There is no central server in our solution, and yet we were able to provide database and authentication layers. Our application is scalable from day one, because we employ high-level services from cloud providers rather than low-level infrastructure. By leveraging the free-tiers of the vendors, we can ship a production-grade web-application with literally zero running costs. Isn't it cool?
+But, Serverless is also fun! In this post we have seen how to use several different services to build a complete new web application. There is no central server in our solution, and yet we were able to provide database and authentication layers. Our application is scalable from day one because we employ high-level services from cloud providers rather than low-level infrastructure. By leveraging the free-tiers of the vendors, we can ship a production-grade web-application with literally zero running costs. Isn't it cool?
 
 ## Appendix: Troubleshooting
 
-If you picked a user from Google sign-in screen, got redirected to your website but you still get the “Loading…” message, then probably some error has occurred. As previously mentioned you can call `getRedirectResult` ([docs](https://firebase.google.com/docs/reference/js/firebase.auth.Auth#getredirectresult)) to extract error details and present it nicely to the user. Meanwhile, you can just check the console.
+If you've picked a user from Google sign-in screen and got redirected to your website, but then you get constant "Loading…" message, then probably some error has occurred. As previously mentioned you can call [`getRedirectResult`](https://firebase.google.com/docs/reference/js/firebase.auth.Auth#getredirectresult) to extract error details and present it nicely to the user. Meanwhile, you can just check the console.
 
-If you see an error saying “This browser is not supported or 3rd party cookies and data may be disabled.” like here:
+One of the possible error messages you might see is "This browser is not supported or 3rd party cookies and data may be disabled.":
 
 <img src={thirdPartyCookiesException} alt="3rd party cookies exception" />
 
-It’s probably because 3rd party cookies are disabled in your browser. Unfortunately, signin with Firebase SDK requires to enable 3rd party cookies for Firebase authentication domain ([source](https://github.com/firebase/firebase-js-sdk/issues/865)). The workaround is either to to alias a dedicated subdomain to Firebase authentication domain ([explanation](https://firebase.google.com/docs/auth/web/google-signin#customizing-the-redirect-domain-for-google-sign-in)) or to use an alternative client SDK (for example Google offers [alternative sign-in api](https://developers.google.com/identity/sign-in/web)).
+It’s probably because 3rd party cookies are disabled in your browser. Unfortunately, signin with Firebase SDK requires to enable 3rd party cookies for Firebase authentication domain ([source](https://github.com/firebase/firebase-js-sdk/issues/865)). The workaround is either to to alias a dedicated subdomain to Firebase authentication domain ([explanation](https://firebase.google.com/docs/auth/web/google-signin#customizing-the-redirect-domain-for-google-sign-in)) or to use an alternative client SDK (for example Google offers [alternative sign-in api](https://developers.google.com/identity/sign-in/web)). I've followed the former workaround to make the [live demo](https://blog-serverless-auth-example.gamliela.com/) work on `gamliela.com` domain, with a bit of help from [Stack Overflow](https://stackoverflow.com/a/52309442/565637).
+
+Good luck!
