@@ -1,11 +1,7 @@
 /*eslint-env node*/
-const rehypePrism = require("@mapbox/rehype-prism"); // syntax highlighting
 
 const withMDX = require("@next/mdx")({
   extension: /\.mdx?$/,
-  options: {
-    rehypePlugins: [() => rehypePrism({ ignoreMissing: true })],
-  },
 });
 
 const withImages = require("next-images");

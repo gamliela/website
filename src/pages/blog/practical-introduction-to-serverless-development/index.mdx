@@ -258,7 +258,7 @@ export { loadShoppingList, saveShoppingList };
 
 Update the `ShoppingList` component to use the database:
 
-```jsx
+```jsx {"highlight":[6,10,13,14,17,19,20,21,22,23,25,26,27,28]}
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { loadShoppingList, saveShoppingList } from "../shared/database";
 
@@ -288,7 +288,7 @@ function ShoppingList({ listName }) {
     loadShoppingList(listName).then(setList);
   }, [listName]);
 
-  return <table>// ... no changes here</table>;
+  return <table>{/* No changes here... */}</table>;
 }
 
 export default ShoppingList;
@@ -298,7 +298,7 @@ The component is now accepting the name of the database list as a parameter. The
 
 Our last step is to update `./pages/index.jsx` - we pass `default` as parameter to `ShoppingList` component: recall that our database contains only one shopping list with the name `default`.
 
-```jsx
+```jsx {"highlight":[8]}
 import React from "react";
 import ShoppingList from "../components/ShoppingList";
 
@@ -384,7 +384,7 @@ The standard caveat for this demo applies: Using React hooks with asynchronous f
 
 We need to update Firebase configuration at `./shared/firebase_app.js` to allow our website to authenticate with Google.
 
-```js
+```js {"highlight":[6,7]}
 import firebase from "firebase/app";
 
 if (typeof window !== "undefined") {
@@ -440,7 +440,7 @@ As you can see from the code, the shopping list name is based on the current use
 
 Last step is to use this new component. Update `./pages/index.jsx`:
 
-```jsx
+```jsx {"highlight":[2,8]}
 import React from "react";
 import PersonalShoppingList from "../components/PersonalShoppingList";
 
