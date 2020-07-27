@@ -36,7 +36,15 @@ declare module "@mdx-js/react" {
   export class MDXProvider extends React.Component<MDXProviderProps> {}
 }
 
+declare interface BlogMetadata {
+  title: string;
+  subTitle: string;
+  description: string;
+  date: string;
+}
+
 declare module "*.mdx" {
   let MDXComponent: () => JSX.Element;
-  export default MDXComponent;
+  let metadata: BlogMetadata | undefined;
+  export { MDXComponent as default, metadata };
 }
