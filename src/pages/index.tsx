@@ -13,7 +13,7 @@ const Page = () => (
     <h1 className={styles.header}>Alon Gamliel</h1>
     <ul>
       <li>
-        <Link href="blog/practical-introduction-to-serverless-development">
+        <Link href="blog/a-gentle-introduction-to-serverless-development">
           <a>Practical Introduction to Serverless Development</a>
         </Link>
       </li>

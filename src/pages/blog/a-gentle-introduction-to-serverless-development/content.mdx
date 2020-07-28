@@ -21,7 +21,7 @@ import thirdPartyCookiesException from "./3rd-party-cookies-exception.png";
 
 export const metadata = {
   title: "A Gentle Introduction to Serverless Development",
-  subTitle: "Or: How to build a small website free of cost",
+  subTitle: "or, How to build a small website free of cost",
   description: `This guide describes how to build a public website, including secured database, without using a central server. The technology stack includes Netlify, Next.js, Firebase and Google Cloud APIs.`,
   date: "2020-05-09",
 };
@@ -30,15 +30,17 @@ export const metadata = {
 
 For many years, web servers have been used to provide a layer of security for websites. They are often placed in front of database servers, and prevent access from unauthorised users. Wordpress have a security layer baked in, which explains at least part of its popularity. However, these days running a server for the sole purpose of authentication is not needed any more. OAuth2 protocol abstracts the tasks of authentication and authorization, and identity management can be purchased as a service from all major cloud providers. [Google Identity Platform](https://cloud.google.com/identity-platform), [AWS Cognito](https://aws.amazon.com/cognito/) and [Auth0](https://auth0.com/) are just a few examples.
 
-With a modern tool stack, it possible to stitch together different services to host HTML pages, store data in a database, authenticate users and more. This technique is called serverless development - as there is no central server that orchestrates the different services. Obviously, many real servers are still involved, but they are not necessarily aware to each other and can be even provided by different vendors. The orchestration can actually be part of the Javascript application running at the user's browser. The trust, which is crucial for multi-vendor services to work together, is achieved by exchanging signed tokens as part of the OAuth2 protocol.
+With a modern tool stack, it is possible to stitch together different services to host HTML pages, store data in a database, authenticate users and more. This technique is called serverless development - as there is no central server that orchestrates the different services. Obviously, many real servers are still involved, but they are not necessarily aware to each other and can be even provided by different vendors. The orchestration can actually be part of the Javascript application running at the user's browser. The trust, which is crucial for multi-vendor services to work together, is achieved by exchanging signed tokens as part of the OAuth2 protocol.
 
-In this post I’m going to show how to build a personal shopping list editor. A user can signup to the app on a public url, create a personal shopping list and store it securely in the cloud. All of this without writing any server code and with no running costs.
+In this post I’m going to show how to build a personal shopping list editor. A user can signup to the app on a public url, create a personal shopping list and store it securely in the cloud. All of that without writing any server code and with no running costs.
 
-We will use [Next.js](https://nextjs.org/) to bundle React application, and [Netlify](https://www.netlify.com/) to serve it to the public. [Firebase](https://firebase.google.com/) will store the data securely. We will allow users to signin the application using their personal Google account, so we don't need to build a user management system of our own. [Live demo](https://blog-serverless-auth-example.gamliela.com/) and [complete source code](https://github.com/gamliela/blog-serverless-auth-example) are also available.
+We will use [Next.js](https://nextjs.org/) to bundle a React application, and [Netlify](https://www.netlify.com/) to serve it to the public. [Firebase](https://firebase.google.com/) will store the data securely. We will allow users to signin the application using their personal Google account, so we don't need to build a user management system of our own. [Live demo](https://blog-serverless-auth-example.gamliela.com/) and [complete source code](https://github.com/gamliela/blog-serverless-auth-example) are also available.
+
+Let’s start.
 
 ## The Local Application
 
-Let’s start. Our first goal is to create a simple app, a shopping list editor, and run it on our local machine. No database nor authenticating are yet involved.
+Our first goal is to create a simple app, a shopping list editor, and run it on our local machine. No database nor authenticating are yet involved.
 
 We will begin with a skeleton application powered by Next.js. This framework allows us to pack React application as bunch of static HTML, JS and CSS files, so we can easily serve them from a remote server later on.
 
@@ -514,7 +516,7 @@ In a production code you would probably need to handle this exception more nicel
 
 Serverless can be dangerous. By exposing API key directly to the browser, anyone can use that key for accessing cloud resources on your behalf. Theoretically, one can use that key to bombard Firebase with requests, for example with a bot that generates huge shopping lists, and as result you’ll end up with a huge bill by the end of the month. In a traditional server-based development this is not an issue, because overloading the server will simply make it crash. But in serverless world there is no load limit, and no cost limit too! Hence it's a good practice to limit your budget on the account level. We'll touch this point again later.
 
-Google provide some [best practices](https://cloud.google.com/docs/authentication/api-keys) around api keys, and how to secure them. One of their significant recommendation is to actually not use them - but that would defeat the purpose of this guide so we’ll ignore this recommendation. Yes - serverless development does pose some new risks!
+Google provide some [best practices](https://cloud.google.com/docs/authentication/api-keys) around API keys, and how to secure them. One of their significant recommendation is to actually not use them - but that would defeat the purpose of this guide so we’ll ignore this recommendation. Yes - serverless development does pose some new risks!
 
 What can we do then? As explained at Google's documentation we can restrict the key. We can make sure that only certain websites can use the key, and only for a very specific purpose. This will reduce the security risk.
 
@@ -546,6 +548,8 @@ Development in serverless style is challenging. It requires integration with mul
 
 But, Serverless is also fun! In this post we have seen how to use several different services to build a complete new web application. There is no central server in our solution, and yet we were able to provide database and authentication layers. Our application is scalable from day one because we employ high-level services from cloud providers rather than low-level infrastructure. By leveraging the free-tiers of the vendors, we can ship a production-grade web-application with literally zero running costs. Isn't it cool?
 
+Good luck!
+
 ## Appendix: Troubleshooting
 
 If you've picked a user from Google sign-in screen and got redirected to your website, but then you get constant "Loading…" message, then probably some error has occurred. As previously mentioned you can call [`getRedirectResult`](https://firebase.google.com/docs/reference/js/firebase.auth.Auth#getredirectresult) to extract error details and present it nicely to the user. Meanwhile, you can just check the console.
@@ -554,6 +558,4 @@ One of the possible error messages you might see is "This browser is not support
 
 <img src={thirdPartyCookiesException} alt="3rd party cookies exception" />
 
-It’s probably because 3rd party cookies are disabled in your browser. Unfortunately, signin with Firebase SDK requires to enable 3rd party cookies for Firebase authentication domain ([source](https://github.com/firebase/firebase-js-sdk/issues/865)). The workaround is either to to alias a dedicated subdomain to Firebase authentication domain ([explanation](https://firebase.google.com/docs/auth/web/google-signin#customizing-the-redirect-domain-for-google-sign-in)) or to use an alternative client SDK (for example Google offers [alternative sign-in api](https://developers.google.com/identity/sign-in/web)). I've followed the former workaround to make the [live demo](https://blog-serverless-auth-example.gamliela.com/) work on `gamliela.com` domain, with a bit of help from [Stack Overflow](https://stackoverflow.com/a/52309442/565637).
-
-Good luck!
+It’s probably because 3rd party cookies are disabled in your browser. Unfortunately, signin with Firebase SDK requires to enable 3rd party cookies for Firebase authentication domain ([source](https://github.com/firebase/firebase-js-sdk/issues/865)). The workaround is either to to alias a dedicated subdomain to Firebase authentication domain ([explanation](https://firebase.google.com/docs/auth/web/google-signin#customizing-the-redirect-domain-for-google-sign-in)) or to use an alternative client SDK (for example Google offers [alternative sign-in API](https://developers.google.com/identity/sign-in/web)). I've followed the former workaround to make the [live demo](https://blog-serverless-auth-example.gamliela.com/) work on my `gamliela.com` domain, with a bit of help from [Stack Overflow](https://stackoverflow.com/a/52309442/565637).
