@@ -1,9 +1,8 @@
-import React, { HTMLProps } from "react";
+import React, { ReactElement } from "react";
 import Highlight, { defaultProps, Language } from "prism-react-renderer";
+import { ComponentProps } from "@mdx-js/react";
 import theme from "prism-react-renderer/themes/oceanicNext";
 import styles from "./styles.module.css";
-
-type PrismCodeBlockProps = HTMLProps<{}> & { metastring?: string };
 
 interface Meta {
   highlight?: number[];
@@ -14,7 +13,7 @@ function PrismCodeBlock({
   children,
   className,
   metastring,
-}: PrismCodeBlockProps) {
+}: ComponentProps): ReactElement {
   const code = children as string;
   const language = className?.replace(/language-/, "") as Language;
   const meta: Meta = metastring ? JSON.parse(metastring.trim()) : {};

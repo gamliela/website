@@ -1,5 +1,6 @@
 declare module "@mdx-js/react" {
   import * as React from "react";
+
   type ComponentType =
     | "a"
     | "blockquote"
@@ -26,13 +27,20 @@ declare module "@mdx-js/react" {
     | "thematicBreak"
     | "tr"
     | "ul";
-  export type Components = {
-    [key in ComponentType]?: React.ComponentType<{ children: React.ReactNode }>;
+
+  export type ComponentProps = React.HTMLProps<Element> & {
+    metastring?: string;
   };
+
+  export type Components = {
+    [key in ComponentType]?: React.ComponentType<ComponentProps>;
+  };
+
   export interface MDXProviderProps {
     children: React.ReactNode;
     components: Components;
   }
+
   export class MDXProvider extends React.Component<MDXProviderProps> {}
 }
 

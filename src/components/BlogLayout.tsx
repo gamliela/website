@@ -1,12 +1,15 @@
-import React from "react";
-import { MDXProvider } from "@mdx-js/react";
+import React, { ReactNode } from "react";
+import { Components, MDXProvider } from "@mdx-js/react";
 import PrismCodeBlock from "./PrismCodeBlock";
 
-const components = {
+const components: Components = {
   code: PrismCodeBlock,
 };
 
-function withBlogLayout(Content: () => JSX.Element, metadata?: BlogMetadata) {
+function withBlogLayout(
+  Content: () => JSX.Element,
+  metadata?: BlogMetadata
+): () => ReactNode {
   function BlogLayout() {
     const title = metadata?.title && (
       <h1 className="text-center">{metadata?.title}</h1>

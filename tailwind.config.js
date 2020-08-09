@@ -1,7 +1,7 @@
 /*eslint-env node*/
 
 module.exports = {
-  purge: [],
+  purge: false,
   theme: {
     extend: {},
   },
