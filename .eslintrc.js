@@ -52,6 +52,7 @@ module.exports = {
         "no-undef": "off", // not needed for TS projects. https://github.com/typescript-eslint/typescript-eslint/issues/662
         "react/jsx-no-undef": "off", // not needed for TS projects. https://github.com/typescript-eslint/typescript-eslint/issues/662
         "@typescript-eslint/explicit-function-return-type": "off", // @typescript-eslint has problems to infer render() return types (is there a better way?)
+        "react/prop-types": "off", // not needed for TS projects. https://github.com/yannickcr/eslint-plugin-react/issues/1461
       },
     },
   ],
