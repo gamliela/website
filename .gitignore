@@ -1,25 +1,2 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
-# dependencies
 /node_modules
-
-# next.js
-/.next
-/out_functions
-/out_publish
-
-# misc
-.DS_Store
-
-# environment files (may contain secrets)
-/*.env
-
-# debug
-/*.log
-
-# IDEs
 /.idea
-
-# auto-generated files by build/next-on-netlify
-# we need the 404 file to support netlify-dev + server-static framework
-/404.html
