@@ -18,6 +18,12 @@ Used as lab for these technologies:
 $ pnpm dev
 ```
 
+To run within Netlify environment:
+
+```
+$ pnpm exec netlify dev
+```
+
 #### Lint with ESLint
 
 ```
@@ -30,17 +36,11 @@ $ pnpm lint
 $ pnpm format
 ```
 
-#### Deploy to Netlify
+#### Build & Deploy to Netlify
 
 ```
-$ pnpm deploy
+$ pnpm exec netlify deploy --build
 ```
 
-For the first deploy, the script will link your local environment to account on Netlify.
-To deploy to prod, add the `--prod` parameter.
-
-It is also possible to simulate prod environment on your local machine, using [Netlify Dev](https://www.netlify.com/products/dev/).
-
-```
-$ pnpm dev-netlify
-```
+This will deploy the local environment to Netlify. At the moment, images are broken when using this method. Waiting for
+a fix. See: https://answers.netlify.com/t/netlify-next-js-images-throw-ipx-error-500/51632/21
