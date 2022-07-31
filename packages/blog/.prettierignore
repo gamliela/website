@@ -1,1 +1,4 @@
-.next
+/.next
+/out
+/.netlify
+/package-lock.json
