@@ -1,10 +1,7 @@
-import mdx from "@next/mdx";
-import remarkMdxCodeMetaPlugin from "remark-mdx-code-meta";
-
-const withMDX = mdx({
+const withMDX = require("@next/mdx")({
   extension: /\.mdx?$/,
   options: {
-    remarkPlugins: [remarkMdxCodeMetaPlugin], // Process extra fields of code blocks.
+    remarkPlugins: [require("remark-mdx-code-meta").remarkMdxCodeMeta], // Process extra fields of code blocks.
     rehypePlugins: [],
     providerImportSource: "@mdx-js/react",
   },
@@ -16,4 +13,4 @@ const nextConfig = {
   pageExtensions: ["ts", "tsx", "js", "jsx", "md", "mdx"],
 };
 
-export default withMDX(nextConfig);
+module.exports = withMDX(nextConfig);
