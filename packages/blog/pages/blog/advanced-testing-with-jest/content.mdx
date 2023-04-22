@@ -1,0 +1,427 @@
+import { ImageLoader } from "../../../components/page-support/advanced-testing-with-jest/ImageLoader";
+
+export const metadata = {
+  id: "d37c96b9-b59e-4e5e-b292-70ffb46c4da0",
+  title: "Advanced Testing with Jest",
+  description:
+    "In this post, I'll show a few techniques to write maintainable code that confidently tests asynchronous code. I'll show common pitfalls and how to avoid them.",
+  date: "2023-04-22",
+};
+
+Jest and React Testing Library are great. This combo is easy to use when dealing with synchronous code, for example, component
+renders and state updates. However, testing code can quickly
+become messy when implementing asynchronous operations such as data loading. This may lead developers to take shortcuts
+when writing tests and reduce the overall team's confidence in their code.
+
+In this post, I'll show a few techniques to write maintainable code that confidently tests asynchronous code. I'll show common pitfalls and how to avoid them.
+
+### A synthesized example
+
+You've been requested to build a component with the following requirements.
+
+- It has two buttons, "Load image" and "Cancel". By default, the "Cancel" button is disabled.
+- When clicking "Load image", it loads an image from a [https://httpbin.org/image](https://httpbin.org/image) and displays it.
+- It disables the "Load image" button when a request is in progress and enables the "Cancel" button.
+- It displays an error message if there is an error.
+- It displays an error message if a response hasn't been received after 2 seconds.
+- It allows the user to abort the request. When that happens, no error message is displayed.
+
+Here is a demo for this component. The implementation is less important. The focus of this post is on testing, so we
+shouldn't care for implementation details! If you're still curious, it is [available here](https://github.com/gamliela/blog-advanced-testing-with-jest/blob/master/src/ImageLoader/ImageLoader.jsx).
+
+<ImageLoader />
+
+Note: `httpbin.org` can be slow sometimes. If you get a timeout error, try again. You can manually test error or timeout scenarios by throttling network speed to "Offline" or "Slow 3G" in browser dev tools.
+
+### Test principles
+
+Before getting into specifics of asynchronous testing let's review some basic principles.
+
+#### Write tests based on user behaviour
+
+If you're lucky and business requirements are detailed enough, you'll have the test definition provided already. For example, the requirement list above easily translated to test titles. If the requirements are loose, run the code and test it manually. Don't overthink it - just test the things that make sense to you, as a user. Now you'd only
+need to automate these tests into code. The key-point is putting yourself in shoes of the user, whether it's a real user or just another service calling your service, and making sure the tests cover their expectation.
+
+Note: You may well argue that this principle is, practically, Behavior-Driven Testing (BDT).
+
+#### Do not mock implementation details
+
+To keep our tests focused on user behaviour, and also less vulnerable to code refactors, the tests need to verify only the "what", not the "how" (["Black-box testing"](https://en.wikipedia.org/wiki/Black-box_testing)). That is, test code must not know how implementation was done. Derived from that, we should avoid mocks as much as possible.
+
+Avoiding mocks has another benefit, though. Data loading, as demonstrated above, is quite a common pattern. So are error handling, timeouts and cancellation. It should be relatively easy to clone the tests of this component to other components with similar behaviour. But to ease duplication, again, the test code must not know (depend on) how implementation was done.
+
+#### Do mock external resources
+
+Entirely avoiding mocks is actually much harder than it sounds! Luckily, external resources are exempt from this rule. As a rule of thumb, an external resource is any piece of software deployed separately to your code. That can be a remote network service, but also the browser in which your code is about to run. There are multiple reasons here: being deployed separately, external services may not be suitable in a local test environment. They may consume expensive resources or trigger unwanted side effects during testing. Also, since they usually expose a well-defined contract, they're easy to mock. In this example, we'll use [jsdom](https://github.com/jsdom/jsdom) to mock the DOM (provided by default in create-react-app) and [MSW](https://mswjs.io/) to mock the `https://httpbin.org/image` endpoint. We'll also use Jest to mock time-related APIs.
+
+#### Write the important tests first
+
+In many teams I worked with, writing tests was one of those tasks that was always left to the end. If there was a tight deadline
+then there was a good chance to not have tests at all. Knowing this enterprise dynamic, it's import to plan ahead and
+write the important tests first. That is, tests that covers a significant portion of the code and the happy control
+paths. As more time is available, more and more tested could be added to cover edge case scenarios and improve coverage
+in general.
+
+### The mock
+
+Before coding the tests themselves, we need to mock a remote server that returns an image per request. Rather than repeating the mock logic for every test, it's better to write an actual endpoint that returns a real image and to serve this endpoint with an API mocking tool like MSW. This makes the mock reusable by many tests.
+
+```javascript
+import { compose, context, rest } from "msw";
+import { setupServer } from "msw/node";
+
+const server = setupServer();
+
+beforeAll(() => server.listen());
+afterEach(() => server.resetHandlers());
+afterAll(() => server.close());
+
+function mockRemoteImageServer({
+  webpImage = mockWebpImage(),
+  error = false,
+  responseTime = 0,
+} = {}) {
+  server.use(
+    rest.get("https://httpbin.org/image", async (req, res, ctx) => {
+      if (webpImage && req.headers.get("accept") === "image/webp" && !error) {
+        if (responseTime) {
+          await sleep(responseTime);
+        }
+        return res(
+          compose(
+            context.set("Content-Length", webpImage.byteLength.toString()),
+            context.set("Content-Type", "image/webp"),
+            context.body(webpImage)
+          )
+        );
+      } else {
+        return res(ctx.status(400));
+      }
+    })
+  );
+}
+
+// Returns hardcoded blank webp image.
+function mockWebpImage() {
+  return Buffer.from(
+    "UklGRj4AAABXRUJQVlA4IDIAAAAQBACdASpEAEYAPpFIoUylpCMiIUgAsBIJaQAACfGjRo0aNGjRo0Z+AAD++E0AAAAAAA==",
+    "base64"
+  );
+}
+
+function sleep(timeout) {
+  return new Promise((resolve) => setTimeout(() => resolve(), timeout));
+}
+```
+
+This code provides a mock server using MSW that will return a webp image when it receives a GET request to `https://httpbin.org/image` with an `accept` header set to `image/webp`. The `mockRemoteImageServer` function takes in optional parameters that can be used as "levers" to customize the mock's behavior. These levers provide sensible defaults for happy-case scenarios and can be pulled by the tests to simulate different scenarios without requiring changes to the mock itself. This approach improves the developer experience by making the mock more flexible and easier to work with.
+
+This code is complex, but we'll soon see that it eliminates all mocking boilerplate in the tests, making them only a few lines of code each. This makes reading/writing tests much easier. The overall benefit increases as we add more and more tests.
+
+### The tests
+
+Writing a single test for each business requirement described at the beginning of this post results in achieving 100% coverage of the codebase. This approach ensures that every line of code is tested at least once, providing comprehensive testing of the entire application.
+
+#### 🧪 It has two buttons, "Load image" and "Cancel". By default, the "Cancel" button is disabled.
+
+Using the guidelines outlined previously, we start by writing a simple test to verify that the component is rendered correctly. This trivial test provides a coverage boost and ensures that the layout of the component is working as expected before moving on to more complex tests.
+
+```javascript
+import { render } from "@testing-library/react";
+
+it('has two buttons, "Load image" and "Cancel". By default, the "Cancel" button is disabled', () => {
+  render(<ImageLoader />);
+
+  expect(getLoadButton()).toBeInTheDocument();
+
+  const cancelButton = getCancelButton();
+  expect(cancelButton).toBeDisabled();
+  expect(queryError()).toBeNull();
+});
+```
+
+There are no surprises here. This test is a simple render-and-check test that does not involve any asynchronous behavior. If you are a fan of snapshot testing, this is where you could use it to ensure that the layout and style are rendered exactly as designed. Personally, I prefer not to use snapshot testing as I believe it can lead to brittle tests and obscure bugs.
+
+To aid in writing tests, we define several self-explanatory utility functions that can be used across all of our tests. These functions help to reduce duplication and make our tests more readable and maintainable:
+
+```javascript
+import { screen } from "@testing-library/react";
+
+const getLoadButton = () => screen.getByRole("button", { name: "Load image" });
+const getCancelButton = () => screen.getByRole("button", { name: "Cancel" });
+const findImage = () => screen.findByAltText("random stuff from httpbin.org");
+const queryImage = () => screen.queryByAltText("random stuff from httpbin.org");
+const queryError = () => screen.queryByTestId("error");
+const findError = () => screen.findByTestId("error");
+```
+
+Although I kept the literal strings in the test for clarity, it is ideal to import these strings from the code being tested. This approach helps to ensure consistency and reduces the risk of errors that might arise from typos or outdated strings.
+
+#### 🧪 When clicking "Load image", it loads an image from a `https://httpbin.org/image` and displays it.
+
+```javascript
+import { fireEvent } from "@testing-library/react";
+
+test('When clicking "Load image", it loads an image from a `https://httpbin.org/image` and displays it', async () => {
+  const mockedImage = mockWebpImage();
+  mockRemoteImageServer({ webpImage: mockedImage });
+
+  render(<ImageLoader />);
+  fireEvent.click(getLoadButton());
+
+  const image = await findImage();
+  expect(image.src).toContain(mockedImage.toString("base64"));
+  expect(queryError()).toBeNull();
+});
+```
+
+The previous test simply checked the layout of the component, whereas this test involves an actual user action. Here, we see the payoff of the setup code we defined earlier. Instead of having to mock internal implementation details, we can provide real image input to the mock server and expect that exact image to be rendered. This approach helps to ensure that our tests are robust and accurately reflect real-world usage scenarios.
+
+The test code is laid out in the Arrange-Act-Assert (AAA) pattern. The first block arranges the mock data and prepares
+the scene for testing; The second trigger the code that needs to be tested; and in the last block, the outcome is
+asserted.
+
+We use the `fireEvent` utility from [`@testing-library/user-event`](https://testing-library.com/docs/user-event/intro) to trigger the button click event. Alternatively, we could have used `getLoadButton().click()` since `getLoadButton` returns an HTML element. However, it's important to note that directly manipulating components outside of React's control can lead to unexpected behavior. React will warn against this in the console with a message like:
+
+```
+Warning: An update to ImageLoader inside a test was not wrapped in act(...).
+```
+
+An alternative approach to clicking the button directly is to use the [`act`](https://legacy.reactjs.org/docs/test-utils.html#act) utility provided by React to inform it that we're about to interact with an already rendered component.
+
+```javascript
+act(getLoadButton().click());
+```
+
+However, we don't need to do this when using `fireEvent`, as it already wraps the event handler with `act` automatically. Additionally, `fireEvent` provides more accurate event simulation than clicking the button directly, making it the preferred method.
+
+#### 🧪 It disables the "Load image" button when a request is in progress and enables the "Cancel" button.
+
+This test checks the interactivity of the component while the load is in progress.
+
+```javascript
+import { waitFor } from "@testing-library/react";
+
+it('disables the "Load image" button when a request is in progress and enables the "Cancel" button', async () => {
+  mockRemoteImageServer();
+
+  render(<ImageLoader />);
+  const loadButton = getLoadButton();
+  const cancelButton = getCancelButton();
+  fireEvent.click(loadButton);
+
+  expect(loadButton).toBeDisabled();
+  expect(cancelButton).toBeEnabled();
+
+  await waitFor(() => {
+    expect(loadButton).toBeEnabled();
+  });
+  expect(cancelButton).toBeDisabled();
+  expect(queryError()).toBeNull();
+});
+```
+
+In this test, we are once again focusing on the behavior of the component rather than its implementation details, which means that we don't need to mock any internal functionality. Additionally, since the purpose of this test is to verify the interactivity of the component while a request is in progress, we don't need to worry about which image is being loaded. As a result, we don't pass any parameters to `mockRemoteImageServer`, and the test code is more concise.
+
+#### 🧪 It displays an error message if there is an error.
+
+So far, we have tested the behavior of a successful happy path. But when dealing with network connection, testing errors is important too.
+
+```javascript
+it("displays an error message if there is an error", async () => {
+  mockRemoteImageServer({ error: true });
+
+  render(<ImageLoader />);
+  fireEvent.click(getLoadButton());
+
+  const error = await findError();
+  expect(error).toHaveTextContent("An error has occurred.");
+  expect(queryImage()).toBeNull();
+});
+```
+
+This test focuses on the case where an error occurs during the image loading process. To achieve this, we use the `mockRemoteImageServer` utility to simulate an error response from the server. While the specific type of error is less important, we want to ensure that the user is properly notified of the issue.
+
+#### 🧪 It displays an error message if a response hasn't been received after 2 seconds.
+
+This test checks the component's behaviour when the server takes too long to respond. To simulate this scenario, we use the `mockRemoteImageServer` utility with a delay of 2500ms. Then, we trigger the image loading process and expect that after 2200ms, a timeout error message is displayed on the screen.
+
+```javascript
+it("displays an error message if a response hasn't been received after 2 seconds", async () => {
+  mockRemoteImageServer({ responseTime: 2500 });
+
+  render(<ImageLoader />);
+  fireEvent.click(getLoadButton());
+  jest.advanceTimersByTime(2200);
+
+  const error = await findError();
+  expect(error).toHaveTextContent("Timeout error.");
+  expect(queryImage()).toBeNull();
+});
+```
+
+So far, all tests were instantaneous; we did have asynchronous code but there was no delay of any kind. But here, we
+want to test a control path that only gets triggerred after 2 seconds. We don't want to wait _real_ 2 seconds (in the general case, that might be much longer), so we need to mock the time. System time is just another external service to our code so mocking it doesn't breach our rule of not mocking implementation details.
+
+To make Jest to mock setTimeout (and a few other time-related functions) we must call this function in the beginning of
+the test file:
+
+```javascript
+jest.useFakeTimers();
+```
+
+`jest.useFakeTimers()` allows us to control time in our tests by simulating the behavior of timers like `setTimeout` and `setInterval`. By default, these timers are mocked and do not actually fire, so we can fast-forward the clock in our tests to simulate the passing of time.
+
+In this particular test, we are simulating a delay of 2500ms using `mockRemoteImageServer`, and then checking that after 2200ms, a timeout error message is displayed. To achieve this, we need to manually advance the timers by calling `jest.advanceTimersByTime(2200)`.
+
+By using fake timers, we can simulate a variety of time-based scenarios and ensure that our code behaves correctly under different conditions.
+
+#### 🧪 It allows the user to abort the request. When that happens, no error message is displayed.
+
+Aborting an asynchronous operation in JavaScript can be challenging and is not typically implemented in website user interfaces. However, there are scenarios in advanced UIs where an "abort" feature is necessary. In those cases, it's important to have a reliable method to test it.
+
+```javascript
+it("allows the user to abort the request with no error message", async () => {
+  mockRemoteImageServer({ responseTime: 2500 });
+
+  render(<ImageLoader />);
+  const loadButton = getLoadButton();
+
+  fireEvent.click(loadButton);
+  expect(loadButton).toBeDisabled();
+
+  await advanceTimersByTimeAsync(1000);
+  fireEvent.click(getCancelButton());
+
+  await waitFor(() => {
+    expect(loadButton).toBeEnabled();
+  });
+  expect(queryError()).toBeNull();
+});
+```
+
+As in all previous tests, this is a 100% behavioural test, and no assumptions or mocking of internal details are made.
+We mock a slow external server and click the cancel button before the timeout threshold. Then we assert that the
+operation is done (because the "load" button is enabled again), and no error is presented.
+
+`advanceTimersByTimeAsync` does warrant special discussion, though. Before explaining what it is and why we need it, let's replace it with `jest.advanceTimersByTime(3000);`.
+
+Take a moment and think about what the result should be before reading on.
+
+Since we wait more than 2 seconds, the component should render an error, and the test should fail, right? Wrong. Life is
+full of surprises, and the test passes.
+
+Now let's change it again to:
+
+```javascript
+jest.advanceTimersByTime(3000);
+await Promise.resolve().then();
+await Promise.resolve().then();
+await Promise.resolve().then();
+```
+
+With this change, the test now fails as expected.
+
+Huh??!
+
+To understand this magic, we must learn how `jest.advanceTimersByTime` works. First, it is crucial to realise that
+this function is synchronous. Jest mocked our `setTimeout` call of 2 seconds, which was part of the component code, but
+it did it synchronously. The component implementation set new promises _after_ the timeout, but they didn't have the
+chance to run before the javascript runtime returned from `jest.advanceTimersByTime`, and the test continued to its end.
+So React didn't have chance to render the error message. The promises to do so were still waiting in the microtask queue.
+
+So why did we need at least 3 async calls to `Promise.resolve().then()`? Each call pauses the test code and allows all
+promises waiting in the microtasks queue to get executed. However, since those promises might trigger new promises (think of promise chains), we need to wait for the new promises too. How many times? Potentially infinitely, but in this particular example the number is 3. It totally depends on the implementation code.
+
+Does this code smell? Indeed. The truth is that the only way to use `jest.advanceTimersByTime` safely is to make sure
+the code we're testing doesn't create new promises. But how we can do that without taking assumptions on how the
+component works?
+
+My conclusion is one. To reduce the chance of false positive tests, **don't use `jest.advanceTimersByTime` or any other
+synchronous variation of it**.
+
+Luckily, in Jest version 29, they
+provided an [asynchronous version](https://jestjs.io/docs/jest-object#jestadvancetimersbytimeasyncmstorun). This
+function advances the mocked time but also exhausts the microtasks queue. On the other hand, Create React App is stuck
+with Jest version 27, and since CRA is a [dead project](https://react.dev/learn/start-a-new-react-project), it is not
+likely to change soon. So if you're using CRA (as I did for this blog post) you'd need this polyfill:
+
+```javascript
+async function advanceTimersByTimeAsync(time) {
+  await flushMicrotasks();
+  jest.advanceTimersByTime(time);
+  await flushMicrotasks();
+}
+
+async function flushMicrotasks() {
+  await new Promise((resolve) =>
+    jest.requireActual("timers").setImmediate(resolve)
+  );
+}
+```
+
+This works but is still too magical. A better solution is to offload the magic to a time-mocking library
+like [Sinon.JS](https://sinonjs.org/releases/latest/fake-timers/). This library is already part of Jest
+but unfortunately, Jest v27 doesn't expose all its functionality.
+
+## Challenges faced
+
+I've seen many places where devs prefer to mock implementation details rather than treat their code as a black box. I
+can understand why; many times, it's just easier. For example, consider the component in this example. It is relatively
+small, and I use famous frameworks like CRA and Jest. Still, there were a few technical problems I had to solve before
+getting all tests running in confidence.
+
+I've already mentioned the problem with `jest.advanceTimersByTime`. This can be solved by replacing with an asynchronous version.
+
+If you'll try to run the tests above, you might encounter this error:
+
+```text
+AbortSignal.timeout is not a function
+```
+
+The implementation uses this function to abort the load operation after 2 seconds. This function is relatively new in
+the [spec](https://github.com/whatwg/dom/issues/951); While it works perfectly fine in
+the browser, this function is not supported by `jsdom` - the emulator used by Jest to simulate a browser environment.
+There is an [open issue](https://github.com/jsdom/jsdom/issues/3516) already, but till it get fixed, you can use this
+polyfill ([reference](https://github.com/whatwg/dom/issues/951#issuecomment-922833719)):
+
+```javascript
+if (!AbortSignal.timeout) {
+  AbortSignal.timeout = (ms) => {
+    const controller = new AbortController();
+    setTimeout(() => controller.abort(new DOMException("TimeoutError")), ms);
+    return controller.signal;
+  };
+}
+```
+
+Another issue I had relates to MSW. As I mentioned, I'm using CRA to
+build the app. To ease testing, CRA depends on the `whatwg-fetch` library, which mocks `fetch` in `jsdom`. This mock
+supports fetch aborts. However, MSW 1.1.0 adds its own version of fetch mock, overriding `whatwg-fetch`'s mock, which doesn't support fetch aborts. It took me hours to debug the code! Unfortunately, the solution was to downgrade to MSW 1.0.0. There's an open issue on [MSW's GitHub repository](https://github.com/mswjs/msw/issues/1563).
+
+While I was debugging the code, I noticed a weird phenomenon. The same code produced a different test result when
+running with or without a debugger. It took me a while until I realised: By default, Jest allows only 5 seconds for each
+test. When debugging an asynchronous component code, you'll probably hit this threshold. Then, when the component code
+finishes, the control returns to Jest, which will fail the test because 5 seconds have elapsed. The solution is to
+use the [`testTimeout`](https://jestjs.io/docs/configuration#testtimeout-number) API to increase the timeout for debugging purposes.
+
+I also considered a different testing approach. Can I switch to Vite? Converting the component code to Vite was
+an easy and pleasant experience. However, Vite doesn't support Jest out of the box, and I started messing around with
+various adapters to get this working. While I could switch to [Vitest](https://vitest.dev/) or
+even [the native node test runner](https://nodejs.org/api/test.html#test-runner), Jest is still widely used in the
+industry and I didn't want to lose the focus of this blog post.
+
+### Conclusion
+
+I showed multiple tests that cover asynchronous scenarios. None of the tests rely on implementation details nor mocking
+them. I used two external mocks: one mocks the external server and another to mock the time. Those external mocks are
+independent with the tests utilising them. Therefore, they can be used by other tests in the future. I reached 100%
+coverage of the component code, and I believe the test code is clear and concise.
+
+Testing asynchronous code can be challenging, though. There are a few setup problems, and addressing them requires a
+decent level of skill and a deep understanding of how tools work. Many junior devs may not have these skills yet, and it
+potentially directs them to bad testing habits. I'm sure things will get improved in the future, but we're not there
+yet. Luckily, the workarounds above are a one-off investment. After they're in place, writing tests becomes easy, and
+reading them even more.
+
+The complete source code of the component and all tests shown above is [available here](https://github.com/gamliela/blog-advanced-testing-with-jest/tree/master/src).

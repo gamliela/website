@@ -1,0 +1,22 @@
+.ImageLoader {
+  text-align: center;
+  border: 1px solid;
+}
+
+.ImageLoader button {
+  border: 1px solid;
+  padding: 4px 8px;
+  background-color: #c5c5c5;
+}
+
+.ImageLoader button:disabled {
+  background-color: #f0f0f0;
+}
+
+.ImageLoader [data-testid] {
+  color: red;
+}
+
+.ImageLoader img {
+  display: inline
+}
