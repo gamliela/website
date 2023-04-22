@@ -3,8 +3,9 @@ declare module "*.mdx" {
   type MDXContent = typeof import("*.mdx").default;
 
   interface BlogMetadata {
+    id: string; // UUID v4.
     title: string;
-    subTitle: string;
+    subTitle?: string;
     description: string;
     date: string;
   }

@@ -1,7 +1,9 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode, useEffect } from "react";
 import { useMDXComponents, MDXProvider } from "@mdx-js/react";
 import PrismPreCodeBlock from "./PrismPreCodeBlock";
 import { BlogMetadata, MDXContent } from "*.mdx";
+import { useRouter } from "next/router";
+import { DiscussionEmbed } from "disqus-react";
 
 function withBlogLayout(
   Content: MDXContent,
@@ -17,6 +19,8 @@ function withBlogLayout(
       <div className="lead text-center">{metadata?.subTitle}</div>
     );
 
+    const router = useRouter();
+
     return (
       <MDXProvider components={mdxComponents}>
         <article className="container mx-auto antialiased text-gray-900 px-6 py-6">
@@ -26,6 +30,17 @@ function withBlogLayout(
               {subTitle}
             </header>
             <Content />
+          </div>
+          <div style={{ paddingTop: 50 }}>
+            <DiscussionEmbed
+              shortname="gamliela"
+              config={{
+                url: "https://gamliela.com/" + router.asPath,
+                identifier: metadata?.id,
+                title: metadata?.title,
+                language: "en-nz",
+              }}
+            />
           </div>
         </article>
       </MDXProvider>
