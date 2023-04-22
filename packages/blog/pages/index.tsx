@@ -15,27 +15,31 @@ function Page(): ReactElement {
         <article className="prose lg:prose-xl">
           <header>
             <h1>Alon Gamliel</h1>
-            <h2>Senior Developer and Software Architect</h2>
+            <h2>Software Developer and Solution Architect</h2>
           </header>
-          <p>
-            Are you in need of software engineering services? I&apos;d be happy
-            to help on an hourly basis. Typescript is my favourite language but
-            I am fluent in many others. I specialise in Amazon Connect and
-            custom Softphone development. If you&apos;re interested in learning
-            more, feel free to check out my{" "}
-            <a
-              href="https://www.linkedin.com/in/gamliela/"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Linkedin profile
-            </a>{" "}
-            and connect with me.
-          </p>
-          <p>
-            I live in Wellington, New Zealand. Open for remote work. [
-            <a href="#contact-section">Contact</a>]
-          </p>
+          <section>
+            <p>
+              Hi there! I&apos;m a software developer based in Wellington, New
+              Zealand, with a passion for problem-solving through code. I
+              specialize in Amazon Connect and custom Softphone development, and
+              I&apos;m fluent in many languages, including Typescript.
+            </p>
+            <p>
+              Whether you&apos;re in need of software engineering services or
+              just want to chat about your latest project, I&apos;m happy to
+              help on an hourly basis and open to remote work. Check out my{" "}
+              <a
+                href="https://www.linkedin.com/in/gamliela/"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Linkedin profile
+              </a>{" "}
+              to learn more, and feel free to{" "}
+              <a href="#contact-section">reach out</a> if you have any questions
+              or just want to say hello!
+            </p>
+          </section>
           <section>
             <h3>Software Development</h3>
             <p>
@@ -57,9 +61,9 @@ function Page(): ReactElement {
           <section>
             <h3>MVP Development</h3>
             <p>
-              I have long experience in small startup companies, as an employee or
-              as a founder. Let&apos;s work together to turn your software idea
-              into a reality!
+              I have long experience in small startup companies, as an employee
+              or as a founder. Let&apos;s work together to turn your software
+              idea into a reality!
             </p>
             <ul>
               <li>Plan for scale; code the essentials.</li>
@@ -97,9 +101,16 @@ function Page(): ReactElement {
           </section>
           <section>
             <h3>Serverless Website Development</h3>
-            <p>I love Frontend development and I specialise in React.</p>
+            <p>
+              I love Frontend development, and I specialise in React. With
+              serverless development techniques, I can build a website with
+              negligible monthly costs while retaining high availability.{" "}
+              <Link href="/blog/a-gentle-introduction-to-serverless-development">
+                Read more
+              </Link>
+            </p>
             <ul>
-              <li>Zero monthly costs (e.g. Netlify).</li>
+              <li>Serverless deployments (e.g. Netlify, S3).</li>
               <li>Admin portals, dashboards.</li>
               <li>
                 Pixel-perfect implementation with a designer of your choice.
@@ -122,27 +133,18 @@ function Page(): ReactElement {
             </ul>
           </section>
           <section>
-            <h3>Gotchas</h3>
-            <p>
-              No one knows everything, and I&apos;m no different. Here&apos;s a
-              partial list of things that are on my learning list.
-            </p>
-            <ul>
-              <li>Mobile development.</li>
-              <li>.Net ecosystem.</li>
-              <li>Deep tech (AI, Cyber etc.).</li>
-              <li>Hardware, IoT.</li>
-              <li>People management.</li>
-            </ul>
-          </section>
-          <section>
             <h3>Blog</h3>
             <p>
               I am currently in the process of building my blog&apos;s content,
-              but feel free to check out my first post and stay tuned for more
+              but feel free to check out my first posts and stay tuned for more
               updates.
             </p>
             <ul>
+              <li>
+                <Link href="/blog/advanced-testing-with-jest">
+                  <a>Advanced Testing with Jest</a>
+                </Link>
+              </li>
               <li>
                 <Link href="/blog/a-gentle-introduction-to-serverless-development">
                   <a>A Gentle Introduction to Serverless Development</a>
