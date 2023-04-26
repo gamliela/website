@@ -71,7 +71,12 @@ function Page(): ReactElement {
               <li>Sensible technical choices.</li>
               <li>Infrastructure setup (AWS).</li>
               <li>Deployment setup (CI/CD).</li>
-              <li>Testing framework setup.</li>
+              <li>
+                <Link href="/blog/advanced-testing-with-jest">
+                  <a>Testing framework</a>
+                </Link>{" "}
+                setup.
+              </li>
             </ul>
           </section>
           <section>
