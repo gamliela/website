@@ -1,0 +1,49 @@
+.form {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.form input, .form textarea {
+  font-family: 'Montserrat', sans-serif;
+  font-size: calc(20cqw * 100 / 1080);
+  line-height: calc(35cqw * 100 / 1080);
+}
+
+.form input {
+
+}
+
+.form .firstRow {
+  display: flex;
+  justify-content: space-between;
+}
+
+.form .fullNameField input {
+  width: calc(278.24cqw * 100 / 1080);
+  height: calc(45cqw * 100 / 1080);
+}
+
+.form .emailAddressField input {
+  width: calc(241.99cqw * 100 / 1080);
+  height: calc(45cqw * 100 / 1080);
+}
+
+.form .messageField {
+  margin-top: 0.5em;
+  width: 100%;
+  flex-grow: 1;
+}
+
+.form textarea {
+  width: 100%;
+  height: calc(138cqw * 100 / 1080);
+}
+
+.form button {
+  background-color: #7999D5;
+  color: #FFFFFF;
+  font-weight: bold;
+  width: calc(154cqw * 100 / 1080);
+  height: calc(45cqw * 100 / 1080);
+}

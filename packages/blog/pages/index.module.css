@@ -1,0 +1,249 @@
+.main {
+  min-width: 375px;
+  max-width: 1080px;
+  margin: auto;
+  font-family: 'Montserrat', sans-serif;
+  container-type: inline-size;
+}
+
+.main a {
+  font-weight: 500;
+  text-decoration: underline;
+}
+
+.main section p + p {
+  margin-top: 1em;
+}
+
+.separator {
+  display: block;
+  width: calc(43.8cqw * 100 / 1080);
+  height: calc(3cqw * 100 / 1080);
+  background-color: #1F2937;
+  margin: auto;
+}
+
+.icon {
+  width: calc(45cqw * 100 / 1080);
+  height: calc(45cqw * 100 / 1080);
+  background: no-repeat center center;
+  background-size: contain;
+}
+
+.article {
+  font-size: calc(20cqw * 100 / 1080);
+  line-height: calc(35cqw * 100 / 1080);
+}
+
+.section {
+  padding: calc(106.96cqw * 100 / 1080);
+  color: #1F2937;
+}
+
+.section h3 {
+  font-size: calc(35cqw * 100 / 1080);
+  font-weight: bold;
+  margin-bottom: 1em;
+}
+
+.sectionWhite {
+  background-color: #FFFFFF;
+}
+
+.sectionWhite .icon {
+  width: calc(35cqw * 100 / 1080);
+  height: calc(35cqw * 100 / 1080);
+}
+
+.sectionGrey {
+  background-color: #EEEEEE;
+}
+
+.iconList > li {
+  display: flex;
+  gap: calc(23.68cqw * 100 / 1080);
+}
+
+.iconList > li + li {
+  margin-top: 2em;
+}
+
+.iconList > li > * {
+  align-self: center;
+}
+
+.iconGroup {
+  display: flex;
+  flex-wrap: wrap;
+  text-align: center;
+  justify-content: center;
+}
+
+.iconGroup .icon {
+  margin: auto;
+  margin-bottom: 0.5em;
+}
+
+.iconGroup > li {
+  margin-top: 2em;
+  font-weight: 500;
+}
+
+.hero {
+  aspect-ratio: 1080 / 504;
+  height: auto;
+  min-height: 0; /* Needed to constraint height when min-width is applied. */
+  background: url('assets/hero/hero.png') no-repeat center center;
+  background-size: contain;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #FFFFFF;
+  margin-bottom: calc(10.9cqw * 100 / 1080);
+}
+
+.hero h1 {
+  font-size: calc(87.57cqw * 100 / 1080);
+  line-height: calc(105.08cqw * 100 / 1080);
+  font-weight: bold;
+}
+
+.hero h2 {
+  font-size: calc(42.38cqw * 100 / 1080);
+  line-height: calc(42.38cqw * 100 / 1080);
+}
+
+.intro {
+  padding-right: calc(475cqw * 100 / 1080);
+  background: #FFFFFF url('assets/intro/crane.svg') no-repeat right calc(61.13cqw * 100 / 1080) top 0;
+  background-size: contain;
+}
+
+.softwareDevelopment {
+  background: #EEEEEE url('assets/software_development/developer.svg') no-repeat left 0 bottom calc(33.32cqw * 100 / 1080);
+  background-size: contain;
+}
+
+.softwareDevelopment h3 {
+  text-align: center;
+}
+
+.softwareDevelopment > p {
+  max-width: calc(736.18cqw * 100 / 1080);
+  text-align: center;
+  margin: auto;
+}
+
+.softwareDevelopment li {
+  font-weight: 500;
+}
+
+.mvpDevelopment {
+  background: #FFFFFF url('assets/mvp_development/engineer.svg') no-repeat left 0 bottom calc(51.01cqw * 100 / 1080);
+  background-size: contain;
+}
+
+.mvpDevelopment > p {
+  max-width: calc(589.32cqw * 100 / 1080);
+}
+
+.mvpDevelopment > ul {
+  margin-top: 2em;
+  padding-left: calc(423.69cqw * 100 / 1080);
+}
+
+.softwareArchitecture h3 {
+  text-align: center;
+}
+
+.softwareArchitecture > p {
+  text-align: center;
+}
+
+.softwareArchitecture li {
+  width: 50%;
+}
+
+.technicalConsultation {
+  background: #FFFFFF url('assets/technical_consultation/couple.svg') no-repeat right 0 bottom calc(58.11cqw * 100 / 1080);
+  background-size: 120%;
+}
+
+.technicalConsultation > p {
+  max-width: calc(375.82cqw * 100 / 1080);
+}
+
+.serverless h3 {
+  text-align: center;
+}
+
+.serverless > p {
+  text-align: center;
+  max-width: calc(825.88cqw * 100 / 1080);
+}
+
+.serverless li {
+  width: calc(100% / 3)
+}
+
+.amazonConnect {
+  background: transparent url('assets/amazon_connect/agents.svg') no-repeat left calc(-70cqw * 100 / 1080) bottom calc(44.72cqw * 100 / 1080);
+  background-size: 120%;
+}
+
+.amazonConnect > p {
+  max-width: calc(660.01cqw * 100 / 1080);;
+}
+
+.amazonConnect .iconList {
+  margin-top: 2em;
+  margin-bottom: 2em;
+  padding-left: calc(395cqw * 100 / 1080);
+}
+
+.sectionBlog {
+  background: #EEEEEE url('assets/blog/blog.svg') no-repeat right 0 bottom 0;
+  background-size: 45%;
+}
+
+.sectionBlog > p {
+  max-width: calc(450cqw * 100 / 1080);;
+}
+
+.sectionBlog ul {
+  margin-top: 2em;
+}
+
+.sectionBlog li {
+  margin-top: 1em;
+}
+
+.sectionContact {
+  background: #FFFFFF url('assets/contact/contact.svg') no-repeat left calc(-147.27cqw * 100 / 1080) bottom calc(36.68cqw * 100 / 1080);
+  background-size: 120%;
+  padding-left: calc(445.24cqw * 100 / 1080);
+}
+
+.sectionContact .separator {
+  margin-left: 0;
+}
+
+.sectionContact .contactForm {
+  margin-bottom: 3em;
+}
+
+.footer {
+  font-family: 'Montserrat', sans-serif;
+  font-size: calc(20cqw * 100 / 1080);
+  line-height: calc(35cqw * 100 / 1080);
+  padding: calc(35cqw * 100 / 1080) calc(50cqw * 100 / 1080);
+  background-color: #1F2937;
+  color: #FFFFFF;
+  display: flex;
+  gap: calc(35cqw * 100 / 1080);
+}
+
+.footerTitle {
+  flex-grow: 1;
+}
