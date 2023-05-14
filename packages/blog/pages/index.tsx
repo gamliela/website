@@ -1,4 +1,4 @@
-import React, { ReactElement, ReactNode } from "react";
+import React, { ReactElement, ReactNode, useEffect, useState } from "react";
 import Head from "next/head";
 import Link from "next/link";
 import ContactForm from "../components/ContactForm";
@@ -29,8 +29,18 @@ import icon_dashboard from "./assets/amazon_connect/icon_dashboard.svg";
 import icon_integrations from "./assets/amazon_connect/icon_integrations.svg";
 import icon_extensions from "./assets/amazon_connect/icon_extensions.svg";
 import icon_portal from "./assets/amazon_connect/icon_portal.svg";
+import Script from "next/script";
 
 function Page(): ReactElement {
+  // May 2023: Firefox doesn't support cqw units.
+  // Workaround reference: https://developer.chrome.com/blog/cq-polyfill/#using-the-container-query-polyfill
+  const [cqwPolyfillRequired, setCqwPolyfillRequired] = useState(false);
+  useEffect(() => {
+    setCqwPolyfillRequired(
+      !("container" in window.document.documentElement.style)
+    );
+  }, []);
+
   return (
     <>
       <Head>
@@ -42,6 +52,9 @@ function Page(): ReactElement {
           href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400..700"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        {cqwPolyfillRequired && (
+          <Script src="https://unpkg.com/container-query-polyfill@^0.2.0" />
+        )}
       </Head>
 
       <main className={`${styles.main} antialiased`}>
