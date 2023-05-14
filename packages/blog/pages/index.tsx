@@ -1,4 +1,4 @@
-import React, { ReactElement } from "react";
+import React, { ReactElement, ReactNode } from "react";
 import Head from "next/head";
 import Link from "next/link";
 import ContactForm from "../components/ContactForm";
@@ -45,317 +45,336 @@ function Page(): ReactElement {
       </Head>
 
       <main className={`${styles.main} antialiased`}>
-        <article className={styles.article}>
+        <article>
           <header className={styles.hero}>
             <h1 className="m-0">Alon Gamliel</h1>
             <h2>Software Developer and Solution Architect</h2>
           </header>
-          <section
-            className={`${styles.section} ${styles.sectionWhite} ${styles.intro}`}
-          >
-            <p>
-              Hi there! I&apos;m a software developer based in Wellington, New
-              Zealand, with a passion for problem-solving through code. I
-              specialize in Amazon Connect and custom Softphone development, and
-              I&apos;m fluent in many languages, including Typescript.
-            </p>
-            <p>
-              Whether you&apos;re in need of software engineering services or
-              just want to chat about your latest project, I&apos;m happy to
-              help.
-            </p>
-            <p>
-              {" "}
-              Check out my{" "}
-              <a
-                href="https://www.linkedin.com/in/gamliela/"
-                target="_blank"
-                rel="noreferrer"
-              >
-                Linkedin profile
-              </a>{" "}
-              to learn more, and feel free to{" "}
-              <a href="#contact-section">reach out</a> if you have any questions
-              or just want to say hello!
-            </p>
-            <p className={styles.separator} style={{ marginTop: "4em" }} />
-          </section>
-          <section
-            className={`${styles.section} ${styles.sectionGrey} ${styles.softwareDevelopment}`}
-          >
-            <h3>Software Development</h3>
-            <p>
-              With many years of experience as a &quot;hands-on&quot; software
-              engineer, I am well-equipped to be your extra hand in bringing
-              your project to successful completion. I&apos;d be happy to assist
-              you.
-            </p>
-            <ul className={styles.iconList} style={{ marginTop: "2em" }}>
-              <li>
-                <Icon icon={icon_ts} />
-                <span>Typescript, Javascript, Java, SQL &amp; AWS.</span>
-              </li>
-              <li>
-                <Icon icon={icon_fullstack} />
-                <span>
-                  Fullstack development:
-                  <br />
-                  Frontend, Backend and DevOps.
-                </span>
-              </li>
-              <li>
-                <Icon icon={icon_lifecycle} />
-                <span>
-                  Complete lifecycle support:
-                  <br />
-                  Coding, Testing, Deploying &amp; Training.
-                </span>
-              </li>
-              <li>
-                <Icon icon={icon_experience} />
-                <span>+15 years of experience.</span>
-              </li>
-            </ul>
-          </section>
-          <section
-            className={`${styles.section} ${styles.sectionWhite} ${styles.mvpDevelopment}`}
-          >
-            <h3>MVP Development</h3>
-            <p>
-              I have long experience in small startup companies, as an employee
-              or as a founder. Let&apos;s work together to turn your software
-              idea into a reality!
-            </p>
-            <ul className={styles.iconList}>
-              <li>
-                <Icon icon={icon_scale} />
-                <span>Plan for scale; code the essentials.</span>
-              </li>
-              <li>
-                <Icon icon={icon_scope} />
-                <span>Product scope refinement.</span>
-              </li>
-              <li>
-                <Icon icon={icon_tools} />
-                <span>Sensible technical choices.</span>
-              </li>
-              <li>
-                <Icon icon={icon_aws} />
-                <span>Infrastructure setup (AWS).</span>
-              </li>
-              <li>
-                <Icon icon={icon_cicd} />
-                <span>Deployment setup (CI/CD).</span>
-              </li>
-              <li>
-                <Icon icon={icon_testing} />
-                <span>
-                  <Link href="/blog/advanced-testing-with-jest">
-                    <a>Testing framework</a>
-                  </Link>{" "}
-                  setup.
-                </span>
-              </li>
-            </ul>
-          </section>
-          <section
-            className={`${styles.section} ${styles.sectionGrey} ${styles.softwareArchitecture}`}
-          >
-            <h3>Software Architecture</h3>
-            <p>
-              If you need to solve a complex engineering problem,
-              <br /> I can help with deep thinking and formulating a solution.
-            </p>
-            <ul className={styles.iconGroup}>
-              <li>
-                <Icon icon={icon_design} />
-                <span>Technical design documents.</span>
-              </li>
-              <li>
-                <Icon icon={icon_diagram} />
-                <span>Architectural diagrams.</span>
-              </li>
-              <li>
-                <Icon icon={icon_writing} />
-                <span>Strong writing &amp; presentation skills.</span>
-              </li>
-              <li>
-                <Icon icon={icon_mba} />
-                <span>Master&apos;s degree in Computer Science.</span>
-              </li>
-            </ul>
-          </section>
-          <section
-            className={`${styles.section} ${styles.sectionWhite} ${styles.technicalConsultation}`}
-          >
-            <p
-              className={styles.separator}
-              style={{
-                marginRight: "0",
-                translate: "0 -2em",
-              }}
-            />
-            <h3>Technical Consultation</h3>
-            <p>
-              Partnering with a technical expert allows you to focus on the
-              development and growth of your product.
-            </p>
-            <ul
-              className={styles.iconList}
-              style={{ marginTop: "3em", marginBottom: "3em" }}
+          <ResponseSection>
+            <section
+              className={`${styles.section} ${styles.sectionWhite} ${styles.intro}`}
             >
-              <li>
-                <Icon icon={icon_clock} />
-                <span>Time &amp; complexity estimations.</span>
-              </li>
-              <li>
-                <Icon icon={icon_qa} />
-                <span>Code quality evaluation.</span>
-              </li>
-              <li>
-                <Icon icon={icon_review} />
-                <span>Trusted code reviews.</span>
-              </li>
-            </ul>
-          </section>
-          <section
-            className={`${styles.section} ${styles.sectionGrey} ${styles.serverless}`}
-          >
-            <h3>Serverless Website Development</h3>
-            <p>
-              I love Frontend development, and I specialise in React. With
-              serverless development techniques, I can build a website with
-              negligible monthly costs while retaining high availability.{" "}
-              <Link href="/blog/a-gentle-introduction-to-serverless-development">
-                Read more
-              </Link>
-            </p>
-            <ul className={styles.iconGroup} style={{ marginTop: "2em" }}>
-              <li>
-                <Icon icon={icon_serverless} />
-                <span>
-                  Serverless
-                  <br />
-                  deployments
-                  <br />
-                  (e.g. Netlify, S3).
-                </span>
-              </li>
-              <li>
-                <Icon icon={icon_admin} />
-                <span>
-                  Admin portals,
-                  <br />
-                  dashboards.
-                </span>
-              </li>
-              <li>
-                <Icon icon={icon_pen} />
-                <span>
-                  Pixel-perfect
-                  <br />
-                  implementation with a<br />
-                  designer of your choice.
-                </span>
-              </li>
-              <li>
-                <Icon icon={icon_auth} />
-                <span>
-                  Authentication
-                  <br />
-                  (e.g. Google login).
-                </span>
-              </li>
-              <li>
-                <Icon icon={icon_database} />
-                <span>
-                  Database
-                  <br />
-                  (e.g. Firebase).
-                </span>
-              </li>
-            </ul>
-          </section>
-          <section
-            className={`${styles.section} ${styles.sectionWhite} ${styles.amazonConnect}`}
-          >
-            <p
-              className={styles.separator}
-              style={{
-                marginBottom: "2em",
-                translate: "0 -1em",
-              }}
-            />
-            <h3>Amazon Connect Specialist</h3>
-            <p>
-              I have special experience in building software for contact
-              centres, using Amazon Connect.
-            </p>
-            <ul className={styles.iconList}>
-              <li>
-                <Icon icon={icon_integrations} />
-                <span>AWS integration (Lambdas, DynamoDB).</span>
-              </li>
-              <li>
-                <Icon icon={icon_extensions} />
-                <span>Softphone Extensions.</span>
-              </li>
-              <li>
-                <Icon icon={icon_dashboard} />
-                <span>Contact centre dashboards.</span>
-              </li>
-              <li>
-                <Icon icon={icon_portal} />
-                <span>Management portals.</span>
-              </li>
-            </ul>
-          </section>
-          <section
-            className={`${styles.section} ${styles.sectionGrey} ${styles.sectionBlog}`}
-          >
-            <h3>Blog</h3>
-            <p>
-              I am currently in the process of building my blog&apos;s content,
-              but feel free to check out my first posts and stay tuned for more
-              updates.
-            </p>
-            <ul>
-              <li>
-                <Link href="/blog/advanced-testing-with-jest">
-                  <a>Advanced Testing with Jest</a>
-                </Link>
-              </li>
-              <li>
+              <p>
+                Hi there! I&apos;m a software developer based in Wellington, New
+                Zealand, with a passion for problem-solving through code. I
+                specialize in Amazon Connect and custom Softphone development,
+                and I&apos;m fluent in many languages, including Typescript.
+              </p>
+              <p>
+                Whether you&apos;re in need of software engineering services or
+                just want to chat about your latest project, I&apos;m happy to
+                help.
+              </p>
+              <p>
+                {" "}
+                Check out my{" "}
+                <a
+                  href="https://www.linkedin.com/in/gamliela/"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Linkedin profile
+                </a>{" "}
+                to learn more, and feel free to{" "}
+                <a href="#contact-section">reach out</a> if you have any
+                questions or just want to say hello!
+              </p>
+              <p className={styles.separator} style={{ marginTop: "4em" }} />
+            </section>
+          </ResponseSection>
+          <ResponseSection backgroundColor="#EEEEEE">
+            <section
+              className={`${styles.section} ${styles.sectionGrey} ${styles.softwareDevelopment}`}
+            >
+              <h3>Software Development</h3>
+              <p>
+                With many years of experience as a &quot;hands-on&quot; software
+                engineer, I am well-equipped to be your extra hand in bringing
+                your project to successful completion. I&apos;d be happy to
+                assist you.
+              </p>
+              <ul className={styles.iconList} style={{ marginTop: "2em" }}>
+                <li>
+                  <Icon icon={icon_ts} />
+                  <span>Typescript, Javascript, Java, SQL &amp; AWS.</span>
+                </li>
+                <li>
+                  <Icon icon={icon_fullstack} />
+                  <span>
+                    Fullstack development:
+                    <br />
+                    Frontend, Backend and DevOps.
+                  </span>
+                </li>
+                <li>
+                  <Icon icon={icon_lifecycle} />
+                  <span>
+                    Complete lifecycle support:
+                    <br />
+                    Coding, Testing, Deploying &amp; Training.
+                  </span>
+                </li>
+                <li>
+                  <Icon icon={icon_experience} />
+                  <span>+15 years of experience.</span>
+                </li>
+              </ul>
+            </section>
+          </ResponseSection>
+          <ResponseSection>
+            <section
+              className={`${styles.section} ${styles.sectionWhite} ${styles.mvpDevelopment}`}
+            >
+              <h3>MVP Development</h3>
+              <p>
+                I have long experience in small startup companies, as an
+                employee or as a founder. Let&apos;s work together to turn your
+                software idea into a reality!
+              </p>
+              <ul className={styles.iconList}>
+                <li>
+                  <Icon icon={icon_scale} />
+                  <span>Plan for scale; code the essentials.</span>
+                </li>
+                <li>
+                  <Icon icon={icon_scope} />
+                  <span>Product scope refinement.</span>
+                </li>
+                <li>
+                  <Icon icon={icon_tools} />
+                  <span>Sensible technical choices.</span>
+                </li>
+                <li>
+                  <Icon icon={icon_aws} />
+                  <span>Infrastructure setup (AWS).</span>
+                </li>
+                <li>
+                  <Icon icon={icon_cicd} />
+                  <span>Deployment setup (CI/CD).</span>
+                </li>
+                <li>
+                  <Icon icon={icon_testing} />
+                  <span>
+                    <Link href="/blog/advanced-testing-with-jest">
+                      <a>Testing framework</a>
+                    </Link>{" "}
+                    setup.
+                  </span>
+                </li>
+              </ul>
+            </section>
+          </ResponseSection>
+          <ResponseSection backgroundColor="#EEEEEE">
+            <section
+              className={`${styles.section} ${styles.sectionGrey} ${styles.softwareArchitecture}`}
+            >
+              <h3>Software Architecture</h3>
+              <p>
+                If you need to solve a complex engineering problem,
+                <br /> I can help with deep thinking and formulating a solution.
+              </p>
+              <ul className={styles.iconGroup}>
+                <li>
+                  <Icon icon={icon_design} />
+                  <span>Technical design documents.</span>
+                </li>
+                <li>
+                  <Icon icon={icon_diagram} />
+                  <span>Architectural diagrams.</span>
+                </li>
+                <li>
+                  <Icon icon={icon_writing} />
+                  <span>Strong writing &amp; presentation skills.</span>
+                </li>
+                <li>
+                  <Icon icon={icon_mba} />
+                  <span>Master&apos;s degree in Computer Science.</span>
+                </li>
+              </ul>
+            </section>
+          </ResponseSection>
+          <ResponseSection>
+            <section
+              className={`${styles.section} ${styles.sectionWhite} ${styles.technicalConsultation}`}
+            >
+              <p
+                className={styles.separator}
+                style={{
+                  marginRight: "0",
+                  translate: "0 -2em",
+                }}
+              />
+              <h3>Technical Consultation</h3>
+              <p>
+                Partnering with a technical expert allows you to focus on the
+                development and growth of your product.
+              </p>
+              <ul
+                className={styles.iconList}
+                style={{ marginTop: "3em", marginBottom: "3em" }}
+              >
+                <li>
+                  <Icon icon={icon_clock} />
+                  <span>Time &amp; complexity estimations.</span>
+                </li>
+                <li>
+                  <Icon icon={icon_qa} />
+                  <span>Code quality evaluation.</span>
+                </li>
+                <li>
+                  <Icon icon={icon_review} />
+                  <span>Trusted code reviews.</span>
+                </li>
+              </ul>
+            </section>
+          </ResponseSection>
+          <ResponseSection backgroundColor="#EEEEEE">
+            <section
+              className={`${styles.section} ${styles.sectionGrey} ${styles.serverless}`}
+            >
+              <h3>Serverless Website Development</h3>
+              <p>
+                I love Frontend development, and I specialise in React. With
+                serverless development techniques, I can build a website with
+                negligible monthly costs while retaining high availability.{" "}
                 <Link href="/blog/a-gentle-introduction-to-serverless-development">
-                  <a>A Gentle Introduction to Serverless Development</a>
+                  Read more
                 </Link>
-              </li>
-            </ul>
-          </section>
-
-          <section
-            id="contact-section"
-            className={`${styles.section} ${styles.sectionWhite} ${styles.sectionContact}`}
-          >
-            <p
-              className={styles.separator}
-              style={{
-                marginBottom: "2em",
-                translate: "0 -1em",
-              }}
-            />
-            <h3>Contact</h3>
-            <ContactForm className={styles.contactForm} />
-          </section>
+              </p>
+              <ul className={styles.iconGroup} style={{ marginTop: "2em" }}>
+                <li>
+                  <Icon icon={icon_serverless} />
+                  <span>
+                    Serverless
+                    <br />
+                    deployments
+                    <br />
+                    (e.g. Netlify, S3).
+                  </span>
+                </li>
+                <li>
+                  <Icon icon={icon_admin} />
+                  <span>
+                    Admin portals,
+                    <br />
+                    dashboards.
+                  </span>
+                </li>
+                <li>
+                  <Icon icon={icon_pen} />
+                  <span>
+                    Pixel-perfect
+                    <br />
+                    implementation with a<br />
+                    designer of your choice.
+                  </span>
+                </li>
+                <li>
+                  <Icon icon={icon_auth} />
+                  <span>
+                    Authentication
+                    <br />
+                    (e.g. Google login).
+                  </span>
+                </li>
+                <li>
+                  <Icon icon={icon_database} />
+                  <span>
+                    Database
+                    <br />
+                    (e.g. Firebase).
+                  </span>
+                </li>
+              </ul>
+            </section>
+          </ResponseSection>
+          <ResponseSection>
+            <section
+              className={`${styles.section} ${styles.sectionWhite} ${styles.amazonConnect}`}
+            >
+              <p
+                className={styles.separator}
+                style={{
+                  marginBottom: "2em",
+                  translate: "0 -1em",
+                }}
+              />
+              <h3>Amazon Connect Specialist</h3>
+              <p>
+                I have special experience in building software for contact
+                centres, using Amazon Connect.
+              </p>
+              <ul className={styles.iconList}>
+                <li>
+                  <Icon icon={icon_integrations} />
+                  <span>AWS integration (Lambdas, DynamoDB).</span>
+                </li>
+                <li>
+                  <Icon icon={icon_extensions} />
+                  <span>Softphone Extensions.</span>
+                </li>
+                <li>
+                  <Icon icon={icon_dashboard} />
+                  <span>Contact centre dashboards.</span>
+                </li>
+                <li>
+                  <Icon icon={icon_portal} />
+                  <span>Management portals.</span>
+                </li>
+              </ul>
+            </section>
+          </ResponseSection>
+          <ResponseSection backgroundColor="#EEEEEE">
+            <section
+              className={`${styles.section} ${styles.sectionGrey} ${styles.sectionBlog}`}
+            >
+              <h3>Blog</h3>
+              <p>
+                I am currently in the process of building my blog&apos;s
+                content, but feel free to check out my first posts and stay
+                tuned for more updates.
+              </p>
+              <ul>
+                <li>
+                  <Link href="/blog/advanced-testing-with-jest">
+                    <a>Advanced Testing with Jest</a>
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/blog/a-gentle-introduction-to-serverless-development">
+                    <a>A Gentle Introduction to Serverless Development</a>
+                  </Link>
+                </li>
+              </ul>
+            </section>
+          </ResponseSection>
+          <ResponseSection>
+            <section
+              id="contact-section"
+              className={`${styles.section} ${styles.sectionWhite} ${styles.sectionContact}`}
+            >
+              <p
+                className={styles.separator}
+                style={{
+                  marginBottom: "2em",
+                  translate: "0 -1em",
+                }}
+              />
+              <h3>Contact</h3>
+              <ContactForm className={styles.contactForm} />
+            </section>
+          </ResponseSection>
         </article>
       </main>
-      <footer className={styles.footer}>
-        <span>Alon Gamliel</span>
-        <span className={styles.footerTitle}>
-          Software Developer and Solution Architect
-        </span>
-        <span>© 2023</span>
-      </footer>
+      <ResponseSection backgroundColor="#1F2937">
+        <footer className={`${styles.footer} ${styles.narrowContent}`}>
+          <span>Alon Gamliel</span>
+          <span className={styles.footerTitle}>
+            Software Developer and Solution Architect
+          </span>
+          <span>© 2023</span>
+        </footer>
+      </ResponseSection>
     </>
   );
 }
@@ -372,6 +391,22 @@ function Icon({
       className={styles.icon}
       style={{ backgroundImage: `url('${icon.src}')` }}
     ></div>
+  );
+}
+
+interface ResponseSectionProps {
+  backgroundColor?: string;
+  children: ReactNode;
+}
+
+function ResponseSection({
+  backgroundColor = "#FFFFFF",
+  children,
+}: ResponseSectionProps) {
+  return (
+    <div className={styles.responsiveSection} style={{ backgroundColor }}>
+      <div>{children}</div>
+    </div>
   );
 }
 

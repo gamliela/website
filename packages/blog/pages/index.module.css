@@ -1,9 +1,5 @@
 .main {
-  min-width: 375px;
-  max-width: 1080px;
-  margin: auto;
   font-family: 'Montserrat', sans-serif;
-  container-type: inline-size;
 }
 
 .main a {
@@ -13,6 +9,13 @@
 
 .main section p + p {
   margin-top: 1em;
+}
+
+.responsiveSection > div {
+  min-width: 375px;
+  max-width: 1080px;
+  margin: auto;
+  container-type: inline-size;
 }
 
 .separator {
@@ -30,12 +33,9 @@
   background-size: contain;
 }
 
-.article {
+.section {
   font-size: calc(20cqw * 100 / 1080);
   line-height: calc(35cqw * 100 / 1080);
-}
-
-.section {
   padding: calc(106.96cqw * 100 / 1080);
   color: #1F2937;
 }
@@ -238,7 +238,6 @@
   font-size: calc(20cqw * 100 / 1080);
   line-height: calc(35cqw * 100 / 1080);
   padding: calc(35cqw * 100 / 1080) calc(50cqw * 100 / 1080);
-  background-color: #1F2937;
   color: #FFFFFF;
   display: flex;
   gap: calc(35cqw * 100 / 1080);
