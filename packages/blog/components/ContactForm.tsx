@@ -65,9 +65,13 @@ function ContactForm({ className }: { className: string }) {
       </label>
       <button type="submit">Send</button>
       {submitResult === "Success" ? (
-        <span>&nbsp;&nbsp;&nbsp;Message was sent successfully</span>
+        <span className={styles.submitSuccess}>
+          &nbsp;&nbsp;&nbsp;Message was sent successfully
+        </span>
       ) : submitResult === "Failure" ? (
-        <span>&nbsp;&nbsp;&nbsp;Couldn&apos;t send message</span>
+        <span className={styles.submitError}>
+          &nbsp;&nbsp;&nbsp;Couldn&apos;t send message
+        </span>
       ) : undefined}
     </form>
   );

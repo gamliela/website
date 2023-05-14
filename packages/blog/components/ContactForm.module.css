@@ -47,3 +47,17 @@
   width: calc(154cqw * 100 / 1080);
   height: calc(45cqw * 100 / 1080);
 }
+
+.form .submitSuccess, .form .submitError {
+  align-self: center;
+  flex-grow: 1;
+  font-weight: 500;
+}
+
+.form .submitSuccess {
+  color: rgb(128 182 132)
+}
+
+.form .submitError {
+  color: rgb(219 108 52)
+}
