@@ -315,7 +315,10 @@ function Page(): ReactElement {
               <h3>Amazon Connect Specialist</h3>
               <p>
                 I have special experience in building software for contact
-                centres, using Amazon Connect.
+                centres, using Amazon Connect.{" "}
+                <Link href="https://aws-integration-for-contact-centers.breeew.com/">
+                  <a>Purchase 10 hours customisation plan.</a>
+                </Link>
               </p>
               <ul className={styles.iconList}>
                 <li>
