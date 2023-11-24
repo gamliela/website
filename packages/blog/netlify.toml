@@ -1,6 +1,6 @@
 [build.environment]
-  NODE_VERSION = "16"
+  NODE_VERSION = "20"
   NPM_FLAGS = "--version" # prevent Netlify npm install
 [build]
   publish = ".next"
-  command = "npx pnpm@7.6.0 install && npm run build"
+  command = "npx pnpm@8.9.0 install && npm run build"
