@@ -317,7 +317,7 @@ function Page(): ReactElement {
                 I have special experience in building software for contact
                 centres, using Amazon Connect.{" "}
                 <Link href="https://aws-integration-for-contact-centers.breeew.com/">
-                  <a>Purchase 10 hours customisation plan.</a>
+                  <a>Purchase a 10-hour customisation plan.</a>
                 </Link>
               </p>
               <ul className={styles.iconList}>
