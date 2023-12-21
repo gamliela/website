@@ -316,7 +316,7 @@ function Page(): ReactElement {
               <p>
                 I have special experience in building software for contact
                 centres, using Amazon Connect.{" "}
-                <Link href="https://aws-integration-for-contact-centers.breeew.com/">
+                <Link href="https://personal-service.gamliela.com/">
                   <a>Purchase a 10-hour customisation plan.</a>
                 </Link>
               </p>
