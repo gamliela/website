@@ -388,7 +388,7 @@ function Page(): ReactElement {
           <span className={styles.footerTitle}>
             Software Developer and Solution Architect
           </span>
-          <span>© 2023</span>
+          <span>© 2024</span>
         </footer>
       </ResponseSection>
     </>
